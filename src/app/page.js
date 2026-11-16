@@ -1,69 +1,71 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
+  const [populer, setPopuler] = useState([]);
+  const [pengumuman, setPengumuman] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/books/populer").then((r) => r.json()).then(setPopuler);
+    fetch("/api/announcements?published=1")
+      .then((r) => r.json())
+      .then((d) => setPengumuman(d.slice(0, 3)));
+    const saved = localStorage.getItem("user");
+    if (saved) setUser(JSON.parse(saved));
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.js
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main style={{ maxWidth: 1000, margin: "40px auto" }}>
+      <h1>Perpustakaan Kampus</h1>
+
+      <p>
+        <Link href="/katalog">Katalog Buku</Link>{" | "}
+        <Link href="/pengumuman">Pengumuman</Link>{" | "}
+        {user ? (
+          <Link href={`/${user.role}`}>Dashboard</Link>
+        ) : (
+          <>
+            <Link href="/login">Login</Link>{" | "}
+            <Link href="/register">Register</Link>
+          </>
+        )}
+      </p>
+
+      {/* form GET biasa: mengirim ke /katalog?q=kata */}
+      <form action="/katalog">
+        <input name="q" placeholder="Cari judul atau pengarang" />{" "}
+        <button type="submit">Cari</button>
+      </form>
+
+      <h2>Pengumuman Terbaru</h2>
+      {pengumuman.length === 0 && <p>Belum ada pengumuman.</p>}
+      {pengumuman.map((p) => (
+        <div key={p.id} style={{ border: "1px solid #ccc", padding: 10, marginBottom: 8 }}>
+          <small>{p.kategori} - {p.tanggal_rilis}</small>
+          <h3><Link href={`/pengumuman/${p.id}`}>{p.judul}</Link></h3>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      ))}
+
+      <h2>5 Buku Terpopuler</h2>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+        {populer.map((b, i) => (
+          <Link key={b.id} href={`/katalog/${b.id}`}
+            style={{ width: 170, border: "1px solid #ccc", padding: 10 }}>
+            {b.cover_url ? (
+              <img src={b.cover_url} alt={b.judul}
+                style={{ width: "100%", height: 200, objectFit: "cover" }} />
+            ) : (
+              <div style={{ height: 200, background: "#eee" }}>Tanpa sampul</div>
+            )}
+            <strong>#{i + 1}</strong>
+            <h4>{b.judul}</h4>
+            <p>{b.pengarang}</p>
+            <small>Dipinjam {b.jumlah_pinjam}x</small>
+          </Link>
+        ))}
+      </div>
+    </main>
   );
 }

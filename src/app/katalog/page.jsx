@@ -10,6 +10,11 @@ export default function KatalogPage() {
   const [urut, setUrut] = useState("terbaru");
 
   useEffect(() => {
+    const awal = new URLSearchParams(window.location.search).get("q");
+    if (awal) setQ(awal);
+  }, []);
+
+  useEffect(() => {
     fetch("/api/categories").then((r) => r.json()).then(setKategori);
   }, []);
 

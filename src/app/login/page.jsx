@@ -58,7 +58,7 @@ export default function LoginPage() {
         <button type="submit">Login</button> 
       </form> 
       {pesan && <p style={{ color: "red" }}>{pesan}</p>} 
-      <p><Link href="/katalog">Lanjutkan sebagai Tamu</Link></p>
+      <Link href="/">Lanjutkan sebagai Tamu</Link>
     </main> 
   ); 
 } 
