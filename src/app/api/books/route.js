@@ -3,14 +3,29 @@ import pool from "@/lib/db";
 import { validasiBuku } from "@/lib/validasiBuku";
 
 export async function GET(request) {
-  const q = new URL(request.url).searchParams.get("q") || "";
+  const sp = new URL(request.url).searchParams;
+  const q = sp.get("q") || "";
+  const kategori = sp.get("kategori") || "";
+  const urut = sp.get("urut") || "terbaru";
+  // daftar tetap (whitelist), karena nama kolom tidak bisa memakai $1
+  const orderBy =
+    {
+      terbaru: "b.id DESC",
+      tahun: "b.tahun_terbit DESC",
+      rating: "rating_rata DESC NULLS LAST",
+    }[urut] || "b.id DESC";
+
   const result = await pool.query(
-    `SELECT b.*, c.nama AS kategori
+    `SELECT b.*, c.nama AS kategori,
+            ROUND(AVG(r.rating), 1)::float AS rating_rata
      FROM books b
      JOIN categories c ON c.id = b.category_id
-     WHERE b.judul ILIKE $1 OR b.pengarang ILIKE $1
-     ORDER BY b.id DESC`,
-    [`%${q}%`]
+     LEFT JOIN reviews r ON r.book_id = b.id
+     WHERE (b.judul ILIKE $1 OR b.pengarang ILIKE $1)
+       AND ($2::text = '' OR b.category_id = NULLIF($2::text, '')::int)
+     GROUP BY b.id, c.nama
+     ORDER BY ${orderBy}`,
+    [`%${q}%`, kategori]
   );
   return NextResponse.json(result.rows);
 }

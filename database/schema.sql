@@ -91,3 +91,4 @@ VALUES
  ('Sastra & Bahasa',     'SB',  'Novel, puisi, dan buku bahasa');
 
 SELECT * FROM users;
+SELECT * FROM categories;

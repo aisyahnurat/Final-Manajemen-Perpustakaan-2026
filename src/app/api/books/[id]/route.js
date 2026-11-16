@@ -2,6 +2,41 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { validasiBuku } from "@/lib/validasiBuku";
 
+export async function GET(request, { params }) {
+  try {
+    const { id } = await params;
+
+    const buku = await pool.query(
+      `SELECT b.*, c.nama AS kategori,
+              ROUND(AVG(r.rating), 1)::float AS rating_rata
+       FROM books b
+       JOIN categories c ON c.id = b.category_id
+       LEFT JOIN reviews r ON r.book_id = b.id
+       WHERE b.id = $1
+       GROUP BY b.id, c.nama`,
+      [id]
+    );
+    if (buku.rows.length === 0) {
+      return NextResponse.json({ message: "Buku tidak ditemukan" }, { status: 404 });
+    }
+
+    const ulasan = await pool.query(
+      `SELECT r.rating, r.komentar, u.nama_lengkap,
+              to_char(r.created_at, 'YYYY-MM-DD') AS tanggal
+       FROM reviews r
+       JOIN users u ON u.id = r.user_id
+       WHERE r.book_id = $1
+       ORDER BY r.created_at DESC`,
+      [id]
+    );
+
+    return NextResponse.json({ buku: buku.rows[0], ulasan: ulasan.rows });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });
+  }
+}
+
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;

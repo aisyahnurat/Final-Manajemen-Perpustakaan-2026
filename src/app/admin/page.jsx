@@ -15,7 +15,7 @@ export default function AdminPage() {
       <p><Link href="/admin/kategori">Kelola Kategori</Link></p>
       <p><Link href="/pegawai/buku">Kelola Buku</Link></p>
       <p><Link href="/pegawai/pengumuman">Kelola Pengumuman</Link></p>
-
+      <p><Link href="/pegawai/peminjaman">Peminjaman & Sirkulasi</Link></p>
       <button onClick={logout}>Logout</button>
     </main>
   );
