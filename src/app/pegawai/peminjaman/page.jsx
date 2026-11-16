@@ -27,6 +27,17 @@ export default function PeminjamanPage() {
     muat();
   }
 
+    async function aksiPerpanjangan(id, aksi) {
+    const res = await fetch(`/api/loans/${id}/perpanjangan`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ aksi, pegawai_id: user.id }),
+    });
+    const data = await res.json();
+    setPesan(data.message);
+    muat();
+  }
+
   function tolak(id) {
     const alasan = prompt("Alasan penolakan:");
     if (!alasan) return;
@@ -38,6 +49,9 @@ export default function PeminjamanPage() {
   const menunggu = semua.filter((l) => l.status === "Menunggu Konfirmasi");
   const dipinjam = semua.filter((l) => l.status === "Sedang Dipinjam");
   const tunggakan = semua.filter((l) => l.status_denda === "Tertunggak");
+  const perpanjangan = semua.filter(
+    (l) => l.status === "Sedang Dipinjam" && l.status_perpanjangan === "Perpanjangan Diajukan"
+  );
 
   return (
     <main style={{ maxWidth: 1000, margin: "40px auto" }}>
@@ -59,6 +73,26 @@ export default function PeminjamanPage() {
               <td>
                 <button onClick={() => kirimAksi(l.id, "setujui")}>Setujui</button>{" "}
                 <button onClick={() => tolak(l.id)}>Tolak</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h2>Pengajuan Perpanjangan ({perpanjangan.length})</h2>
+      <table border="1" cellPadding="6" style={{ width: "100%" }}>
+        <thead>
+          <tr><th>Mahasiswa</th><th>Buku</th><th>Jatuh Tempo Sekarang</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+          {perpanjangan.map((l) => (
+            <tr key={l.id}>
+              <td>{l.nama_lengkap}</td>
+              <td>{l.judul}</td>
+              <td>{l.tanggal_jatuh_tempo}</td>
+              <td>
+                <button onClick={() => aksiPerpanjangan(l.id, "setujui")}>Setujui</button>{" "}
+                <button onClick={() => aksiPerpanjangan(l.id, "tolak")}>Tolak</button>
               </td>
             </tr>
           ))}

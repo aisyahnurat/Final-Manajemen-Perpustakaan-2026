@@ -92,3 +92,22 @@ VALUES
 
 SELECT * FROM users;
 SELECT * FROM categories;
+SELECT * FROM books;
+
+UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 3 WHERE id = 1;
+
+INSERT INTO books (judul, isbn, pengarang, penerbit, tahun_terbit, category_id, stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari)
+VALUES
+ ('Pemrograman Web dengan Next.js', '978-6020000001', 'Andi Pratama', 'Informatika', 2023,
+   (SELECT id FROM categories WHERE kode = 'TI'), 5, 5, 7, 1000),
+ ('Basis Data dan SQL', '978-6020000002', 'Budi Santoso', 'Informatika', 2021,
+   (SELECT id FROM categories WHERE kode = 'TI'), 3, 3, 7, 1000),
+ ('Algoritma dan Struktur Data', '978-6020000003', 'Citra Dewi', 'Erlangga', 2020,
+   (SELECT id FROM categories WHERE kode = 'TI'), 4, 4, 14, 2000),
+ ('Kumpulan Cerita Nusantara', '978-6020000004', 'Dian Lestari', 'Gramedia', 2019,
+   (SELECT id FROM categories WHERE kode = 'SB'), 2, 2, 14, 500),
+ ('Tata Bahasa Indonesia', '978-6020000005', 'Eko Wijaya', 'Gramedia', 2018,
+   (SELECT id FROM categories WHERE kode = 'SB'), 6, 6, 7, 500)
+ON CONFLICT (isbn) DO NOTHING;
+
+UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 2 WHERE id = 3;

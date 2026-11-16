@@ -13,6 +13,7 @@ export async function GET(request) {
             to_char(l.tanggal_jatuh_tempo, 'YYYY-MM-DD') AS tanggal_jatuh_tempo,
             to_char(l.tanggal_kembali, 'YYYY-MM-DD') AS tanggal_kembali,
             b.judul, u.nama_lengkap, u.nomor_identitas,
+            EXISTS(SELECT 1 FROM reviews r WHERE r.loan_id = l.id) AS sudah_ulasan,
             CASE WHEN l.status = 'Sedang Dipinjam'
                  THEN GREATEST(CURRENT_DATE - l.tanggal_jatuh_tempo, 0)
                  ELSE 0 END AS hari_terlambat,
