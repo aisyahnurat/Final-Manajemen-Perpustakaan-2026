@@ -25,14 +25,19 @@ export async function PUT(request, { params }) {
     if (galat) {
       return NextResponse.json({ message: galat }, { status: 400 });
     }
-    await pool.query(
+    const result = await pool.query(
       `UPDATE announcements
        SET judul = $1, konten = $2, kategori = $3,
            tanggal_rilis = $4, status = $5
        WHERE id = $6`,
       [p.judul, p.konten, p.kategori, p.tanggal_rilis, p.status, id]
     );
-    return NextResponse.json({ message: "Pengumuman diperbarui" });
+    if (result.rowCount === 0) {
+      return NextResponse.json({ message: "Pengumuman tidak ditemukan" }, { status: 404 });
+    }
+    return NextResponse.json({
+      message: `Pengumuman "${p.judul}" berhasil diperbarui (status: ${p.status})`,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });
@@ -42,8 +47,16 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
-    await pool.query("DELETE FROM announcements WHERE id = $1", [id]);
-    return NextResponse.json({ message: "Pengumuman dihapus" });
+    const result = await pool.query(
+      "DELETE FROM announcements WHERE id = $1 RETURNING judul",
+      [id]
+    );
+    if (result.rows.length === 0) {
+      return NextResponse.json({ message: "Pengumuman tidak ditemukan" }, { status: 404 });
+    }
+    return NextResponse.json({
+      message: `Pengumuman "${result.rows[0].judul}" berhasil dihapus`,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });

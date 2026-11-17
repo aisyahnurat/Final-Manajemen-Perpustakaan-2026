@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { pesanKembar } from "@/lib/pesanKategori";
 
 const KELOMPOK = ["Fiksi", "Non-Fiksi"];
 
@@ -19,17 +20,19 @@ export async function PUT(request, { params }) {
         { status: 400 }
       );
     }
-    await pool.query(
+    const result = await pool.query(
       "UPDATE categories SET nama = $1, kode = $2, kelompok = $3, deskripsi = $4 WHERE id = $5",
       [nama, kode, kelompok, deskripsi, id]
     );
-    return NextResponse.json({ message: "Kategori diperbarui" });
+    if (result.rowCount === 0) {
+      return NextResponse.json({ message: "Kategori tidak ditemukan" }, { status: 404 });
+    }
+    return NextResponse.json({
+      message: `Kategori "${nama}" (${kelompok}, kode ${kode}) berhasil diperbarui`,
+    });
   } catch (error) {
     if (error.code === "23505") {
-      return NextResponse.json(
-        { message: "Nama atau kode kategori sudah dipakai" },
-        { status: 409 }
-      );
+      return NextResponse.json({ message: pesanKembar(error) }, { status: 409 });
     }
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });
@@ -39,18 +42,26 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
+
+    const kat = await pool.query("SELECT nama FROM categories WHERE id = $1", [id]);
+    if (kat.rows.length === 0) {
+      return NextResponse.json({ message: "Kategori tidak ditemukan" }, { status: 404 });
+    }
+    const nama = kat.rows[0].nama;
+
     const cek = await pool.query(
       "SELECT COUNT(*)::int AS total FROM books WHERE category_id = $1",
       [id]
     );
     if (cek.rows[0].total > 0) {
       return NextResponse.json(
-        { message: "Tidak bisa dihapus, masih ada buku di kategori ini" },
+        { message: `Kategori "${nama}" tidak bisa dihapus, masih ada ${cek.rows[0].total} buku di dalamnya` },
         { status: 409 }
       );
     }
+
     await pool.query("DELETE FROM categories WHERE id = $1", [id]);
-    return NextResponse.json({ message: "Kategori dihapus" });
+    return NextResponse.json({ message: `Kategori "${nama}" berhasil dihapus` });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });

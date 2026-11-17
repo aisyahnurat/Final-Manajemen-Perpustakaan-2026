@@ -8,6 +8,19 @@ export function validasiBuku(b) {
       return "Semua field wajib diisi (kecuali link sampul)";
     }
   }
+
+  const angka = {
+    tahun_terbit: "Tahun terbit",
+    stok_total: "Stok",
+    durasi_maks_pinjam: "Durasi maksimal pinjam",
+    denda_per_hari: "Denda per hari",
+  };
+  for (const [kolom, label] of Object.entries(angka)) {
+    if (!/^-?[0-9]+$/.test(String(b[kolom]).trim())) {
+      return `${label} harus berupa bilangan bulat tanpa titik atau koma (contoh: 1000)`;
+    }
+  }
+
   if (Number(b.stok_total) < 0 || Number(b.denda_per_hari) < 0) {
     return "Stok dan denda tidak boleh negatif";
   }

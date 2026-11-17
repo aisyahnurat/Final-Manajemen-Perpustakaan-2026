@@ -38,32 +38,39 @@ export async function GET(request, { params }) {
 }
 
 export async function PUT(request, { params }) {
+  let b = {};
   try {
     const { id } = await params;
-    const b = await request.json();
+    b = await request.json();
     const galat = validasiBuku(b);
     if (galat) {
       return NextResponse.json({ message: galat }, { status: 400 });
     }
 
     // stok_tersedia ikut disesuaikan dengan selisih stok_total yang baru
-    await pool.query(
+    const result = await pool.query(
       `UPDATE books SET
          judul = $1, pengarang = $2, penerbit = $3, tahun_terbit = $4,
          category_id = $5,
          stok_tersedia = stok_tersedia + ($6::int - stok_total),
          stok_total = $6::int,
          durasi_maks_pinjam = $7, denda_per_hari = $8, cover_url = $9
-       WHERE id = $10`,
+       WHERE id = $10
+       RETURNING isbn`,
       [b.judul, b.pengarang, b.penerbit, b.tahun_terbit, b.category_id,
        b.stok_total, b.durasi_maks_pinjam, b.denda_per_hari,
        b.cover_url || null, id]
     );
-    return NextResponse.json({ message: "Buku diperbarui" });
+    if (result.rows.length === 0) {
+      return NextResponse.json({ message: "Buku tidak ditemukan" }, { status: 404 });
+    }
+    return NextResponse.json({
+      message: `Buku "${b.judul}" (ISBN ${result.rows[0].isbn}) berhasil diperbarui`,
+    });
   } catch (error) {
     if (error.code === "23514") {
       return NextResponse.json(
-        { message: "Stok total tidak boleh lebih kecil dari jumlah buku yang sedang dipinjam" },
+        { message: `Stok buku "${b.judul}" tidak boleh lebih kecil dari jumlah yang sedang dipinjam` },
         { status: 400 }
       );
     }
@@ -73,8 +80,18 @@ export async function PUT(request, { params }) {
 }
 
 export async function DELETE(request, { params }) {
+  let nama = "ini"; // diisi setelah data buku diambil, dipakai juga oleh catch
   try {
     const { id } = await params;
+
+    const buku = await pool.query(
+      "SELECT judul, isbn FROM books WHERE id = $1",
+      [id]
+    );
+    if (buku.rows.length === 0) {
+      return NextResponse.json({ message: "Buku tidak ditemukan" }, { status: 404 });
+    }
+    nama = `"${buku.rows[0].judul}" (ISBN ${buku.rows[0].isbn})`;
 
     const aktif = await pool.query(
       `SELECT COUNT(*)::int AS total FROM loans
@@ -84,17 +101,17 @@ export async function DELETE(request, { params }) {
     );
     if (aktif.rows[0].total > 0) {
       return NextResponse.json(
-        { message: "Buku sedang dipinjam atau diajukan, tidak bisa dihapus" },
+        { message: `Buku ${nama} masih punya ${aktif.rows[0].total} transaksi aktif, tidak bisa dihapus` },
         { status: 409 }
       );
     }
 
     await pool.query("DELETE FROM books WHERE id = $1", [id]);
-    return NextResponse.json({ message: "Buku dihapus" });
+    return NextResponse.json({ message: `Buku ${nama} berhasil dihapus` });
   } catch (error) {
     if (error.code === "23503") {
       return NextResponse.json(
-        { message: "Buku punya riwayat transaksi, tidak bisa dihapus" },
+        { message: `Buku ${nama} punya riwayat transaksi, tidak bisa dihapus` },
         { status: 409 }
       );
     }

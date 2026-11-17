@@ -30,7 +30,10 @@ export async function POST(request) {
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [p.judul, p.konten, p.kategori, p.tanggal_rilis, p.status, p.created_by || null]
     );
-    return NextResponse.json({ message: "Pengumuman ditambahkan" }, { status: 201 });
+    return NextResponse.json(
+      { message: `Pengumuman "${p.judul}" berhasil ditambahkan dengan status ${p.status}` },
+      { status: 201 }
+    );
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });

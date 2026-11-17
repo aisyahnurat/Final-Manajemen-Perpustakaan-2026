@@ -78,7 +78,12 @@ export default function UsersPage() {
           onChange={ubah} required />{" "}
         {!editId && (
           <>
-            <input name="nomor_identitas" placeholder="NIM / NIP"
+            <input name="nomor_identitas"
+              placeholder={{
+                mahasiswa: "NIM (contoh: H071231001)",
+                admin: "NIP (contoh: ADM002)",
+                pegawai: "NIP (contoh: PGW002)",
+              }[form.role]}
               value={form.nomor_identitas} onChange={ubah} required />{" "}
             <input name="password" type="password" placeholder="Password"
               value={form.password} onChange={ubah} required />{" "}

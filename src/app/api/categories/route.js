@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { pesanKembar } from "@/lib/pesanKategori";
 
 const KELOMPOK = ["Fiksi", "Non-Fiksi"];
 
@@ -34,13 +35,13 @@ export async function POST(request) {
       "INSERT INTO categories (nama, kode, kelompok, deskripsi) VALUES ($1, $2, $3, $4)",
       [nama, kode, kelompok, deskripsi]
     );
-    return NextResponse.json({ message: "Kategori ditambahkan" }, { status: 201 });
+    return NextResponse.json(
+      { message: `Kategori "${nama}" (${kelompok}, kode ${kode}) berhasil ditambahkan` },
+      { status: 201 }
+    );
   } catch (error) {
     if (error.code === "23505") {
-      return NextResponse.json(
-        { message: "Nama atau kode kategori sudah dipakai" },
-        { status: 409 }
-      );
+      return NextResponse.json({ message: pesanKembar(error) }, { status: 409 });
     }
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });

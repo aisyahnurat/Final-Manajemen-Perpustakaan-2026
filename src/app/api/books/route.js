@@ -31,8 +31,9 @@ export async function GET(request) {
 }
 
 export async function POST(request) {
+  let b = {}; // di luar try supaya bisa dipakai di catch
   try {
-    const b = await request.json();
+    b = await request.json();
     const galat = validasiBuku(b);
     if (galat) {
       return NextResponse.json({ message: galat }, { status: 400 });
@@ -46,10 +47,16 @@ export async function POST(request) {
       [b.judul, b.isbn, b.pengarang, b.penerbit, b.tahun_terbit, b.category_id,
        b.stok_total, b.durasi_maks_pinjam, b.denda_per_hari, b.cover_url || null]
     );
-    return NextResponse.json({ message: "Buku ditambahkan" }, { status: 201 });
+    return NextResponse.json(
+      { message: `Buku "${b.judul}" (ISBN ${b.isbn}) berhasil ditambahkan dengan stok ${b.stok_total}` },
+      { status: 201 }
+    );
   } catch (error) {
     if (error.code === "23505") {
-      return NextResponse.json({ message: "ISBN sudah terdaftar" }, { status: 409 });
+      return NextResponse.json(
+        { message: `ISBN ${b.isbn} sudah terdaftar, gunakan ISBN lain` },
+        { status: 409 }
+      );
     }
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });

@@ -1,23 +1,20 @@
-SELECT * FROM users;
-SELECT * FROM categories;
-SELECT * FROM books;
-SELECT COUNT(*) FROM books;
-SELECT id, email, role FROM users;
-SELECT email, password FROM users;
+-- SELECT * FROM users;
+-- SELECT * FROM categories;
+-- SELECT * FROM books;
+-- SELECT COUNT(*) FROM books;
+-- SELECT COUNT(*) FROM categories;
+-- SELECT id, email, role FROM users;
+-- SELECT email, password FROM users;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS reviews, loans, announcements, books, categories, users CASCADE;
-
-UPDATE users
-SET password = crypt(password, gen_salt('bf', 10))
-WHERE password NOT LIKE '$2%';
 
 -- 1. USERS (Admin, Pegawai, Mahasiswa)
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     nama_lengkap VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,  -- plaintext sesuai Bab 10 (nanti bisa diganti hash)
+    password VARCHAR(100) NOT NULL,  -- hash bcrypt
     role VARCHAR(20)  NOT NULL CHECK (role IN ('admin', 'pegawai', 'mahasiswa')),
     nomor_identitas VARCHAR(30) NOT NULL UNIQUE,  -- NIM / NIP
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
@@ -80,7 +77,7 @@ CREATE TABLE loans (
     status_denda VARCHAR(20) NOT NULL DEFAULT 'Tidak Ada' CHECK (status_denda IN ('Tidak Ada', 'Tertunggak', 'Lunas'))
 );
 
--- 6. REVIEWS (satu ulasan per transaksi yang sudah Selesai)
+-- 6. REVIEWS (satu ulasan per transaksi yang sudah selesai)
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     loan_id INT NOT NULL UNIQUE REFERENCES loans(id) ON DELETE CASCADE,
@@ -91,42 +88,11 @@ CREATE TABLE reviews (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
--- DATA AWAL
-INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas) VALUES
- ('Admin Perpustakaan', 'admin@unhas.ac.id', 'admin123', 'admin', 'ADM001'),
- ('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', 'pegawai123', 'pegawai', 'PGW001');
-
-INSERT INTO categories (nama, kode, deskripsi) 
+-- DATA
+INSERT INTO (nama_lengkap, email, password, role, nomor_identitas)
 VALUES
- ('Teknologi Informasi', 'TI',  'Buku seputar komputer dan pemrograman'),
- ('Sastra & Bahasa',     'SB',  'Novel, puisi, dan buku bahasa');
-
-UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 3 WHERE id = 1;
-
-INSERT INTO books (judul, isbn, pengarang, penerbit, tahun_terbit, category_id, stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari)
-VALUES
- ('Pemrograman Web dengan Next.js', '978-6020000001', 'Andi Pratama', 'Informatika', 2023,
-   (SELECT id FROM categories WHERE kode = 'TI'), 5, 5, 7, 1000),
- ('Basis Data dan SQL', '978-6020000002', 'Budi Santoso', 'Informatika', 2021,
-   (SELECT id FROM categories WHERE kode = 'TI'), 3, 3, 7, 1000),
- ('Algoritma dan Struktur Data', '978-6020000003', 'Citra Dewi', 'Erlangga', 2020,
-   (SELECT id FROM categories WHERE kode = 'TI'), 4, 4, 14, 2000),
- ('Kumpulan Cerita Nusantara', '978-6020000004', 'Dian Lestari', 'Gramedia', 2019,
-   (SELECT id FROM categories WHERE kode = 'SB'), 2, 2, 14, 500),
- ('Tata Bahasa Indonesia', '978-6020000005', 'Eko Wijaya', 'Gramedia', 2018,
-   (SELECT id FROM categories WHERE kode = 'SB'), 6, 6, 7, 500)
-ON CONFLICT (isbn) DO NOTHING;
-
-UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 2 WHERE id = 3;
-
-UPDATE users SET email = 'admin@unhas.ac.id' WHERE email = 'admin@kampus.ac.id';
-UPDATE users SET email = 'pegawai@unhas.ac.id' WHERE email = 'pegawai@kampus.ac.id';
-
-ALTER TABLE categories
-ADD COLUMN kelompok VARCHAR(20) NOT NULL DEFAULT 'Non-Fiksi'
-CHECK (kelompok IN ('Fiksi', 'Non-Fiksi'));
-
-ALTER TABLE categories ALTER COLUMN kelompok DROP DEFAULT;
+	('Admin Perpustakaan', 'admin@unhas.ac.id', crypt('admin123', gen_salt('bf', 10)), 'admin', 'ADM001'),
+	('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', crypt('pegawai123', gen_salt('bf', 10)), 'pegawai', 'PGW001');
 
 INSERT INTO categories (nama, kode, kelompok, deskripsi) 
 VALUES
@@ -142,11 +108,50 @@ VALUES
  ('Sejarah & Sains', 'NF-SAINS', 'Non-Fiksi', 'Sejarah dan ilmu pengetahuan'),
  ('Kejahatan Nyata', 'NF-KRIM', 'Non-Fiksi', 'Kasus kriminal berdasarkan kejadian nyata');
 
-DELETE FROM reviews;
-DELETE FROM loans;
-DELETE FROM books;
-
-INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas) 
+INSERT INTO books(judul, isbn, pengarang, penerbit, tahun_terbit, category_id, stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari)
 VALUES
- ('Admin Perpustakaan',   'admin@unhas.ac.id',   crypt('admin123',   gen_salt('bf', 10)), 'admin',   'ADM001'),
- ('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', crypt('pegawai123', gen_salt('bf', 10)), 'pegawai', 'PGW001');
+ ('Dilan: Dia adalah Dilanku Tahun 1990', '978-602-7870-86-4', 'Pidi Baiq', 'Pastel Books', 2014,
+   (SELECT id FROM categories WHERE kode = 'FIK-ROM'), 3, 3, 7, 1000),
+ ('Pride and Prejudice', '978-0-14-143951-8', 'Jane Austen', 'Penguin Classics', 1813,
+   (SELECT id FROM categories WHERE kode = 'FIK-ROM'), 3, 3, 7, 1000),
+ ('Bumi', '978-602-03-0112-9', 'Tere Liye', 'Gramedia Pustaka Utama', 2014,
+   (SELECT id FROM categories WHERE kode = 'FIK-FAN'), 3, 3, 7, 1000),
+ ('Harry Potter and the Sorcerer''s Stone', '978-0-545-06967-0', 'J.K. Rowling', 'Scholastic', 1998,
+   (SELECT id FROM categories WHERE kode = 'FIK-FAN'), 3, 3, 7, 1000),
+ ('Supernova: Ksatria, Puteri, dan Bintang Jatuh', '978-602-291-118-0', 'Dee Lestari', 'Bentang Pustaka', 2001,
+   (SELECT id FROM categories WHERE kode = 'FIK-SCI'), 3, 3, 7, 1000),
+ ('Dune', '978-0-441-17271-9', 'Frank Herbert', 'Ace Books', 1965,
+   (SELECT id FROM categories WHERE kode = 'FIK-SCI'), 3, 3, 7, 1000),
+ ('Katarsis', '978-979-22-9756-0', 'Anastasia Aemilia', 'Gramedia Pustaka Utama', 2012,
+   (SELECT id FROM categories WHERE kode = 'FIK-MIS'), 3, 3, 7, 1000),
+ ('The Da Vinci Code', '978-0-307-47427-8', 'Dan Brown', 'Doubleday', 2003,
+   (SELECT id FROM categories WHERE kode = 'FIK-MIS'), 3, 3, 7, 1000),
+ ('Danur', '978-602-220-080-2', 'Risa Saraswati', 'Bukune', 2011,
+   (SELECT id FROM categories WHERE kode = 'FIK-HOR'), 3, 3, 7, 1000),
+ ('It', '978-1-5011-4297-0', 'Stephen King', 'Scribner', 1986,
+   (SELECT id FROM categories WHERE kode = 'FIK-HOR'), 3, 3, 7, 1000),
+ ('Laut Bercerita', '978-602-424-694-5', 'Leila S. Chudori', 'Kepustakaan Populer Gramedia', 2017,
+   (SELECT id FROM categories WHERE kode = 'FIK-SEJ'), 3, 3, 7, 1000),
+ ('Bumi Manusia', '978-979-97312-3-4', 'Pramoedya Ananta Toer', 'Lentera Dipantara', 1980,
+   (SELECT id FROM categories WHERE kode = 'FIK-SEJ'), 3, 3, 7, 1000),
+ ('Filosofi Teras', '978-602-412-518-9', 'Henry Manampiring', 'Penerbit Buku Kompas', 2018,
+   (SELECT id FROM categories WHERE kode = 'NF-SELF'), 3, 3, 14, 1000),
+ ('Atomic Habits', '978-0-7352-1129-2', 'James Clear', 'Avery', 2018,
+   (SELECT id FROM categories WHERE kode = 'NF-SELF'), 3, 3, 14, 1000),
+ ('Habibie & Ainun', '978-979-1255-13-4', 'B.J. Habibie', 'THC Mandiri', 2010,
+   (SELECT id FROM categories WHERE kode = 'NF-BIO'), 3, 3, 14, 1000),
+ ('Becoming', '978-1-5247-6313-8', 'Michelle Obama', 'Crown', 2018,
+   (SELECT id FROM categories WHERE kode = 'NF-BIO'), 3, 3, 14, 1000),
+ ('The Psychology of Money', '978-0-85719-768-9', 'Morgan Housel', 'Harriman House', 2020,
+   (SELECT id FROM categories WHERE kode = 'NF-BIS'), 3, 3, 14, 1000),
+ ('Rich Dad Poor Dad', '978-1-61268-019-4', 'Robert T. Kiyosaki', 'Plata Publishing', 1997,
+   (SELECT id FROM categories WHERE kode = 'NF-BIS'), 3, 3, 14, 1000),
+ ('Sapiens: Riwayat Singkat Umat Manusia', '978-602-424-416-3', 'Yuval Noah Harari', 'Kepustakaan Populer Gramedia', 2017,
+   (SELECT id FROM categories WHERE kode = 'NF-SAINS'), 3, 3, 14, 1000),
+ ('A Brief History of Time', '978-0-553-38016-3', 'Stephen Hawking', 'Bantam Books', 1988,
+   (SELECT id FROM categories WHERE kode = 'NF-SAINS'), 3, 3, 14, 1000),
+ ('In Cold Blood', '978-0-679-74558-7', 'Truman Capote', 'Random House', 1966,
+   (SELECT id FROM categories WHERE kode = 'NF-KRIM'), 3, 3, 14, 1000),
+ ('I''ll Be Gone in the Dark', '978-0-06-231978-4', 'Michelle McNamara', 'Harper', 2018,
+   (SELECT id FROM categories WHERE kode = 'NF-KRIM'), 3, 3, 14, 1000)
+ON CONFLICT (isbn) DO NOTHING;

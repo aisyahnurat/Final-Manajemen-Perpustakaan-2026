@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import cekAdmin from "@/lib/cekAdmin";
 import { validasiUser } from "@/lib/validasiUser";
-import { validasiNim } from "@/lib/validasiNim";
-import { emailUnhas } from "@/lib/validasiEmail";
-import bcrypt, { hash } from "bcryptjs";
+import { cekIdentitas } from "@/lib/validasiIdentitas";
+import bcrypt from "bcryptjs";
+import { namaPengguna, pesanDuplikat } from "@/lib/pesanUser";
 
 export async function GET(request) {
   const sp = new URL(request.url).searchParams;
@@ -36,11 +36,9 @@ export async function POST(request) {
     }
 
     u.nomor_identitas = String(u.nomor_identitas).trim().toUpperCase();
-    if (u.role === "mahasiswa" && !validasiNim(u.nomor_identitas)) {
-      return NextResponse.json(
-        { message: "Format NIM tidak valid (1 huruf A-H/M/N/P/R diikuti 9 angka)" },
-        { status: 400 }
-      );
+    const galatId = cekIdentitas(u.role, u.nomor_identitas);
+    if (galatId) {
+      return NextResponse.json({ message: galatId }, { status: 400 });
     }
 
     const hash = await bcrypt.hash(u.password, 10);
@@ -49,15 +47,17 @@ export async function POST(request) {
        VALUES ($1, $2, $3, $4, $5)`,
       [u.nama_lengkap, u.email, hash, u.role, u.nomor_identitas]
     );
-    return NextResponse.json({ message: "Pengguna ditambahkan" }, { status: 201 });
+    return NextResponse.json(
+      {
+        message: `Pengguna ${namaPengguna(u.nama_lengkap, u.role, u.nomor_identitas)} berhasil ditambahkan`,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     if (error.code === "23505") {
-      return NextResponse.json(
-        { message: "Email atau nomor identitas sudah terdaftar" },
-        { status: 409 }
-      );
+      return NextResponse.json({ message: pesanDuplikat(error) }, { status: 409 });
     }
     console.error(error);
     return NextResponse.json({ message: "Kesalahan server" }, { status: 500 });
-    }
+  }
 }
