@@ -22,7 +22,8 @@ export default function useAuth(roleDiizinkan) {
     setUser(data);
   }, [router, kunci]);
 
-  function logout() {
+  async function logout() {
+    await fetch("/api/logout", { method: "POST" });
     localStorage.removeItem("user");
     router.push("/login");
   }

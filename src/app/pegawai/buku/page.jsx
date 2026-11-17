@@ -85,8 +85,12 @@ export default function BukuPage() {
           value={form.tahun_terbit} onChange={ubah} required />{" "}
         <select name="category_id" value={form.category_id} onChange={ubah} required>
           <option value="">-- Pilih kategori --</option>
-          {kategori.map((k) => (
-            <option key={k.id} value={k.id}>{k.nama}</option>
+          {["Fiksi", "Non-Fiksi"].map((g) => (
+            <optgroup key={g} label={g}>
+              {kategori.filter((k) => k.kelompok === g).map((k) => (
+                <option key={k.id} value={k.id}>{k.nama}</option>
+              ))}
+            </optgroup>
           ))}
         </select>{" "}
         <input name="stok_total" type="number" min="0" placeholder="Stok"

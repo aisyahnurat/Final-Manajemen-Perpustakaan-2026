@@ -42,13 +42,16 @@ export default function RegisterPage() {
           required 
         /> 
         <br /><br />
-        <input 
-          type="nim" 
-          placeholder="NIM" 
-          value={nim} 
-          onChange={(e) => setNIM(e.target.value)} 
-          required 
-        /> 
+        <input
+          type="text"
+          placeholder="NIM (contoh: H071231001)"
+          value={nim}
+          onChange={(e) => setNim(e.target.value)}
+          maxLength={10}
+          pattern="[A-HMNPRa-hmnpr][0-9]{9}"
+          title="1 huruf (A-H, M, N, P, R) diikuti 9 angka"
+          required
+        />
         <br /><br /> 
         <input 
           type="password" 

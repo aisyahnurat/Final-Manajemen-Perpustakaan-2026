@@ -1,19 +1,27 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 
+const KELOMPOK = ["Fiksi", "Non-Fiksi"];
+
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;
-    const { nama, kode, deskripsi } = await request.json();
+    const { nama, kode, kelompok, deskripsi } = await request.json();
     if (!nama || !kode) {
       return NextResponse.json(
         { message: "Nama dan kode kategori wajib diisi" },
         { status: 400 }
       );
     }
+    if (!KELOMPOK.includes(kelompok)) {
+      return NextResponse.json(
+        { message: "Kelompok harus Fiksi atau Non-Fiksi" },
+        { status: 400 }
+      );
+    }
     await pool.query(
-      "UPDATE categories SET nama = $1, kode = $2, deskripsi = $3 WHERE id = $4",
-      [nama, kode, deskripsi, id]
+      "UPDATE categories SET nama = $1, kode = $2, kelompok = $3, deskripsi = $4 WHERE id = $5",
+      [nama, kode, kelompok, deskripsi, id]
     );
     return NextResponse.json({ message: "Kategori diperbarui" });
   } catch (error) {

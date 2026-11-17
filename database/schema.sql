@@ -1,4 +1,16 @@
+SELECT * FROM users;
+SELECT * FROM categories;
+SELECT * FROM books;
+SELECT COUNT(*) FROM books;
+SELECT id, email, role FROM users;
+SELECT email, password FROM users;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS reviews, loans, announcements, books, categories, users CASCADE;
+
+UPDATE users
+SET password = crypt(password, gen_salt('bf', 10))
+WHERE password NOT LIKE '$2%';
 
 -- 1. USERS (Admin, Pegawai, Mahasiswa)
 CREATE TABLE users (
@@ -24,7 +36,7 @@ CREATE TABLE categories (
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     judul VARCHAR(200) NOT NULL,
-    isbn VARCHAR(20)  NOT NULL UNIQUE,
+    isbn VARCHAR(20) NOT NULL UNIQUE,
     pengarang VARCHAR(150) NOT NULL,
     penerbit VARCHAR(150) NOT NULL,
     tahun_terbit INT NOT NULL,
@@ -80,19 +92,14 @@ CREATE TABLE reviews (
 );
 
 -- DATA AWAL
-INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas) 
-VALUES
- ('Admin Perpustakaan',   'admin@kampus.ac.id',   'admin123',   'admin',   'ADM001'),
- ('Pegawai Perpustakaan', 'pegawai@kampus.ac.id', 'pegawai123', 'pegawai', 'PGW001');
+INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas) VALUES
+ ('Admin Perpustakaan', 'admin@unhas.ac.id', 'admin123', 'admin', 'ADM001'),
+ ('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', 'pegawai123', 'pegawai', 'PGW001');
 
 INSERT INTO categories (nama, kode, deskripsi) 
 VALUES
  ('Teknologi Informasi', 'TI',  'Buku seputar komputer dan pemrograman'),
  ('Sastra & Bahasa',     'SB',  'Novel, puisi, dan buku bahasa');
-
-SELECT * FROM users;
-SELECT * FROM categories;
-SELECT * FROM books;
 
 UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 3 WHERE id = 1;
 
@@ -111,3 +118,35 @@ VALUES
 ON CONFLICT (isbn) DO NOTHING;
 
 UPDATE loans SET tanggal_jatuh_tempo = CURRENT_DATE - 2 WHERE id = 3;
+
+UPDATE users SET email = 'admin@unhas.ac.id' WHERE email = 'admin@kampus.ac.id';
+UPDATE users SET email = 'pegawai@unhas.ac.id' WHERE email = 'pegawai@kampus.ac.id';
+
+ALTER TABLE categories
+ADD COLUMN kelompok VARCHAR(20) NOT NULL DEFAULT 'Non-Fiksi'
+CHECK (kelompok IN ('Fiksi', 'Non-Fiksi'));
+
+ALTER TABLE categories ALTER COLUMN kelompok DROP DEFAULT;
+
+INSERT INTO categories (nama, kode, kelompok, deskripsi) 
+VALUES
+ ('Romantis', 'FIK-ROM', 'Fiksi', 'Kisah cinta dan hubungan'),
+ ('Fantasi', 'FIK-FAN', 'Fiksi', 'Dunia imajinatif dan sihir'),
+ ('Sci-Fi', 'FIK-SCI', 'Fiksi', 'Fiksi ilmiah dan teknologi masa depan'),
+ ('Misteri & Thriller', 'FIK-MIS', 'Fiksi', 'Teka-teki, kriminal, dan ketegangan'),
+ ('Horror', 'FIK-HOR', 'Fiksi', 'Cerita seram dan supernatural'),
+ ('Fiksi Sejarah', 'FIK-SEJ', 'Fiksi', 'Cerita rekaan berlatar sejarah'),
+ ('Self-Improvement', 'NF-SELF', 'Non-Fiksi', 'Pengembangan diri'),
+ ('Biografi & Autobiografi', 'NF-BIO', 'Non-Fiksi', 'Kisah hidup tokoh'),
+ ('Bisnis & Keuangan', 'NF-BIS', 'Non-Fiksi', 'Bisnis, investasi, dan keuangan'),
+ ('Sejarah & Sains', 'NF-SAINS', 'Non-Fiksi', 'Sejarah dan ilmu pengetahuan'),
+ ('Kejahatan Nyata', 'NF-KRIM', 'Non-Fiksi', 'Kasus kriminal berdasarkan kejadian nyata');
+
+DELETE FROM reviews;
+DELETE FROM loans;
+DELETE FROM books;
+
+INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas) 
+VALUES
+ ('Admin Perpustakaan',   'admin@unhas.ac.id',   crypt('admin123',   gen_salt('bf', 10)), 'admin',   'ADM001'),
+ ('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', crypt('pegawai123', gen_salt('bf', 10)), 'pegawai', 'PGW001');

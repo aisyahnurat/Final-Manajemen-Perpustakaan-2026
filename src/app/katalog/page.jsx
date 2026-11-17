@@ -33,9 +33,13 @@ export default function KatalogPage() {
         onChange={(e) => setQ(e.target.value)} />{" "}
       <select value={kat} onChange={(e) => setKat(e.target.value)}>
         <option value="">Semua kategori</option>
-        {kategori.map((k) => (
-          <option key={k.id} value={k.id}>{k.nama}</option>
-        ))}
+            {["Fiksi", "Non-Fiksi"].map((g) => (
+            <optgroup key={g} label={g}>
+              {kategori.filter((k) => k.kelompok === g).map((k) => (
+                <option key={k.id} value={k.id}>{k.nama}</option>
+              ))}
+            </optgroup>
+          ))}
       </select>{" "}
       <select value={urut} onChange={(e) => setUrut(e.target.value)}>
         <option value="terbaru">Terbaru ditambahkan</option>

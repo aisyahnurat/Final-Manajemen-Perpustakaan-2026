@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { validasiNim } from "@/lib/validasiNim";
+import { emailUnhas } from "@/lib/validasiEmail";
+import bcrypt from "bcryptjs";
 
 export async function POST(request) {
   try {
@@ -12,19 +15,28 @@ export async function POST(request) {
       );
     }
 
-    // validasi email kampus (harus berakhiran .ac.id)
-    const emailKampus = /^[^\s@]+@[^\s@]+\.ac\.id$/;
-    if (!emailKampus.test(email)) {
+    // validasi email kampus Unhas
+    if (!emailUnhas(email)) {
       return NextResponse.json(
-        { message: "Gunakan email kampus (berakhiran .ac.id)" },
+        { message: "Gunakan email kampus (berakhiran unhas.ac.id)" },
         { status: 400 }
       );
     }
 
+    // validasi NIM: 1 huruf (A-H, M, N, P, R) + 9 angka
+    const nimBersih = String(nim).trim().toUpperCase();
+    if (!validasiNim(nimBersih)) {
+      return NextResponse.json(
+        { message: "Format NIM tidak valid (1 huruf A-H/M/N/P/R diikuti 9 angka)" },
+        { status: 400 }
+      );
+    }
+
+    const hash = await bcrypt.hash(password, 10);
     await pool.query(
       `INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
        VALUES ($1, $2, $3, 'mahasiswa', $4)`,
-      [nama, email, password, nim]
+      [nama, email, password, nimBersih]
     );
 
     return NextResponse.json(

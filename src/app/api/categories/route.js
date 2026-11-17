@@ -1,29 +1,38 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 
+const KELOMPOK = ["Fiksi", "Non-Fiksi"];
+
 export async function GET() {
   const result = await pool.query(
-    `SELECT c.id, c.nama, c.kode, c.deskripsi, COUNT(b.id)::int AS jumlah_buku
+    `SELECT c.id, c.nama, c.kode, c.kelompok, c.deskripsi,
+            COUNT(b.id)::int AS jumlah_buku
      FROM categories c
      LEFT JOIN books b ON b.category_id = c.id
      GROUP BY c.id
-     ORDER BY c.nama`
+     ORDER BY c.kelompok, c.nama`
   );
   return NextResponse.json(result.rows);
 }
 
 export async function POST(request) {
   try {
-    const { nama, kode, deskripsi } = await request.json();
+    const { nama, kode, kelompok, deskripsi } = await request.json();
     if (!nama || !kode) {
       return NextResponse.json(
         { message: "Nama dan kode kategori wajib diisi" },
         { status: 400 }
       );
     }
+    if (!KELOMPOK.includes(kelompok)) {
+      return NextResponse.json(
+        { message: "Kelompok harus Fiksi atau Non-Fiksi" },
+        { status: 400 }
+      );
+    }
     await pool.query(
-      "INSERT INTO categories (nama, kode, deskripsi) VALUES ($1, $2, $3)",
-      [nama, kode, deskripsi]
+      "INSERT INTO categories (nama, kode, kelompok, deskripsi) VALUES ($1, $2, $3, $4)",
+      [nama, kode, kelompok, deskripsi]
     );
     return NextResponse.json({ message: "Kategori ditambahkan" }, { status: 201 });
   } catch (error) {
