@@ -78,20 +78,29 @@ export default function HomePage() {
 
         {/* kolom pencarian melayang di tepi bawah hero */}
         <div className="relative z-10 mx-auto -mb-8 max-w-4xl px-4">
-          {/* form GET biasa: mengirim ke /katalog?q=kata */}
-          <form action="/katalog" className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-xl">
-            <span className="pl-3 text-xl">🔍</span>
+          {/* form GET biasa: tekan Enter langsung mengirim ke /katalog?q=kata */}
+          <form
+            action="/katalog"
+            className="flex items-center gap-3 rounded-full bg-[#637545]/80 px-5 py-3 shadow-xl"
+          >
+            <svg
+              className="h-5 w-5 shrink-0 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="M20 20l-4-4" />
+            </svg>
             <input
               name="q"
+              enterKeyHint="search"
               placeholder="Cari judul atau pengarang"
-              className="min-w-0 flex-1 px-2 py-3 text-[#4a4a3f] outline-none"
+              className="min-w-0 flex-1 bg-transparent text-white placeholder-white outline-none"
             />
-            <button
-              type="submit"
-              className="rounded-xl bg-[#2f3b22] px-6 py-3 font-semibold text-white hover:bg-[#1f2815]"
-            >
-              Cari
-            </button>
           </form>
         </div>
       </section>
