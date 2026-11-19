@@ -13,7 +13,7 @@ function hitungPerRak() {
   return 6;
 }
 
-export default function RakBuku({ buku, urutan = false }) {
+export default function RakBuku({ buku, urutan = false, detail = false }) {
   const [perRak, setPerRak] = useState(6);
 
   useEffect(() => {
@@ -29,15 +29,14 @@ export default function RakBuku({ buku, urutan = false }) {
     rak.push(buku.slice(i, i + perRak));
   }
 
+  const kolom = { gridTemplateColumns: `repeat(${perRak}, minmax(0, 1fr))` };
+
   return (
-    <div className="space-y-8 rounded-3xl bg-[#fff0c5]/50 p-4 md:p-8 shadow-inner">
+    <div className="space-y-10 rounded-3xl bg-[#fff0c5]/50 p-4 md:p-8 shadow-inner">
       {rak.map((isi, r) => (
         <div key={r}>
           {/* deretan buku */}
-          <div
-            className="grid items-end gap-3 px-1 md:gap-5"
-            style={{ gridTemplateColumns: `repeat(${perRak}, minmax(0, 1fr))` }}
-          >
+          <div className="grid items-end gap-3 px-1 md:gap-5" style={kolom}>
             {isi.map((b, i) => (
               <Link key={b.id} href={`/katalog/${b.id}`} title={b.judul} className="group block">
                 <div className="relative aspect-[2/3] overflow-hidden rounded-l-sm rounded-r-md shadow-[2px_4px_8px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:-translate-y-2">
@@ -48,7 +47,7 @@ export default function RakBuku({ buku, urutan = false }) {
                       className="flex h-full flex-col justify-between p-2 pl-3 text-white"
                       style={{ backgroundColor: WARNA[b.id % WARNA.length] }}
                     >
-                      <span className="line-clamp-4 text-[10px] font-bold leading-tight md:text-xs">{b.judul}</span>
+                      <span className="line-clamp-4 pr-7 text-[10px] font-bold leading-tight md:text-xs">{b.judul}</span>
                       <span className="line-clamp-2 text-[9px] opacity-90 md:text-[11px]">{b.pengarang}</span>
                     </div>
                   )}
@@ -67,6 +66,29 @@ export default function RakBuku({ buku, urutan = false }) {
 
           {/* papan rak kayu */}
           <div className="h-4 rounded-sm bg-gradient-to-b from-[#e8c98f] to-[#b9884a] shadow-lg" />
+
+          {/* keterangan tiap buku, di bawah papan rak */}
+          {detail && (
+            <div className="mt-3 grid gap-3 px-1 md:gap-5" style={kolom}>
+              {isi.map((b) => (
+                <div key={b.id} className="min-w-0 text-[#2f3b22]">
+                  <p className="line-clamp-2 text-xs font-semibold md:text-sm">{b.judul}</p>
+                  <p className="line-clamp-1 text-[11px] text-[#4a4a3f]/80 md:text-xs">{b.pengarang}</p>
+                  <p className="mt-1 inline-block max-w-full truncate rounded-full bg-[#a9ae88] px-2 py-0.5 text-[10px] font-semibold text-white md:text-xs">
+                    {b.kategori}
+                  </p>
+                  <p className="mt-1 text-[11px] md:text-xs">
+                    ⭐ {b.rating_rata ?? "-"} ·{" "}
+                    {b.stok_tersedia > 0 ? (
+                      `Stok ${b.stok_tersedia}`
+                    ) : (
+                      <span className="font-semibold text-red-700">Stok habis</span>
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ))}
     </div>
