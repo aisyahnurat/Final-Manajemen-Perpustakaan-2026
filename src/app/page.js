@@ -119,6 +119,22 @@ export default function HomePage() {
           ))}
         </section>
 
+        {/* ===== Telusuri abjad ===== */}
+        <section className="rounded-2xl bg-white/70 p-5 shadow backdrop-blur text-center">
+          <h2 className="mb-3 text-lg font-bold text-[#2f3b22]">Belum tahu mau baca apa? Telusuri dari huruf awal</h2>
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((h) => (
+              <Link
+                key={h}
+                href={`/katalog?huruf=${h}`}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-sm font-semibold text-[#4a4a3f] hover:bg-[#5e6b45] hover:text-white transition"
+              >
+                {h}
+              </Link>
+            ))}
+          </div>
+        </section>
+
         {/* ===== Rak: buku terpopuler ===== */}
         <section>
           <h2 className="mb-4 text-2xl font-bold text-[#2f3b22]">Buku Terpopuler</h2>
