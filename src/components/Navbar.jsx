@@ -23,6 +23,7 @@ export default function Navbar() {
   const aktif = (href) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   const tombol = "rounded-full bg-[#5e6b45] text-white font-semibold px-5 py-2 hover:bg-[#4a5636]";
+  const tombolKecil = "rounded-full bg-[#5e6b45] text-white font-semibold text-sm px-6 py-1.5 hover:bg-[#4a5636]";
 
   return (
     <header className="bg-[#fff0c5]/50 rounded-full backdrop-blur-md backdrop-brightness-100 sticky top-3 z-10">
@@ -78,9 +79,9 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Menu HP */}
+      {/* Menu HP: panel di bawah navbar, rata tengah */}
       {buka && (
-        <div className="md:hidden flex flex-col gap-3 px-4 pb-4">
+        <div className="md:hidden absolute left-3 right-3 top-20 flex flex-col items-center gap-4 rounded-3xl bg-[#fff0c5] px-4 py-5 text-center shadow-lg">
           {menu.map((m) => (
             <Link
               key={m.href}
@@ -92,11 +93,17 @@ export default function Navbar() {
             </Link>
           ))}
           {user ? (
-            <Link href={`/${user.role}`} className={tombol + " text-center"}>Dashboard</Link>
+            <Link href={`/${user.role}`} onClick={() => setBuka(false)} className={tombolKecil}>
+              Dashboard
+            </Link>
           ) : (
             <>
-              <Link href="/login" className="text-[#4a4a3f]">Login</Link>
-              <Link href="/register" className={tombol + " text-center"}>Register</Link>
+              <Link href="/login" onClick={() => setBuka(false)} className="text-[#4a4a3f]">
+                Login
+              </Link>
+              <Link href="/register" onClick={() => setBuka(false)} className={tombolKecil}>
+                Register
+              </Link>
             </>
           )}
         </div>
