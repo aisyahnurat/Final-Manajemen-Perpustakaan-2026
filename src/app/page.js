@@ -30,17 +30,23 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen"
+    style={{
+        backgroundColor: "#FFF0C5",
+        backgroundImage:
+          "radial-gradient(circle at 0% 0%, #637545 0%, transparent 45%), radial-gradient(circle at 100% 100%, #BFA28C 0%, transparent 50%)",
+        backgroundAttachment: "fixed",
+      }}>
       <Navbar />
 
       {/* ===== Hero ===== */}
-      <section className="relative">
+      <section className="relative -mt-24">
         {/* foto di kanan, memudar ke kiri */}
         <div
           className="absolute inset-0 bg-[url('/bg-perpus-fix.png')] bg-cover bg-center opacity-40 md:opacity-100 md:left-[5%] [mask-image:linear-gradient(to_right,transparent,black_35%)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_35%)]"
         />
 
-        <div className="relative mx-auto max-w-6xl px-4 pt-14 pb-24 md:pt-24 md:pb-32">
+        <div className="relative mx-auto max-w-6xl px-4 pt-36 pb-24 md:pt-24 md:pb-32">
           <p className="text-xs font-semibold tracking-[0.25em] text-[#4a4a3f]">
             SELAMAT DATANG DI PERPUSTAKAAN
           </p>

@@ -25,7 +25,7 @@ export default function Navbar() {
   const tombol = "rounded-full bg-[#5e6b45] text-white font-semibold px-5 py-2 hover:bg-[#4a5636]";
 
   return (
-    <header className="bg-white/50 rounded-full backdrop-blur-md backdrop-brightness-110 sticky top-3 z-10">
+    <header className="bg-[#fff0c5]/50 rounded-full backdrop-blur-md backdrop-brightness-100 sticky top-3 z-10">
       <nav className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
