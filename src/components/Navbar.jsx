@@ -30,12 +30,10 @@ export default function Navbar() {
       <nav className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5e6b45] text-xl">
-            📚
-          </span>
+          <img src="/logo.png" alt="Logo PIKUN" className="h-10 w-10 object-contain" />
           <span className="leading-tight">
-            <span className="block text-xl font-bold text-[#2f3b22]">PIKUN</span>
-            <span className="hidden sm:block text-[11px] text-[#4a4a3f]/70">Baca. Pinjam. Berkembang.</span>
+            <span className="block text-xl font-serif font-bold text-[#2f3b22]">PIKUN</span>
+            <span className="hidden sm:block text-[11px] text-[#4a4a3f]/70">Perpustakaan Intelektual Kaya Usaha Ngelamun</span>
           </span>
         </Link>
 
@@ -62,8 +60,7 @@ export default function Navbar() {
             <Link href={`/${user.role}`} className={tombol}>Dashboard</Link>
           ) : (
             <>
-              <Link href="/login" className="font-medium text-[#4a4a3f] hover:text-[#5e6b45]">Login</Link>
-              <Link href="/register" className={tombol}>Register</Link>
+              <Link href="/login" className={tombol}>Login</Link>
             </>
           )}
         </div>
@@ -98,11 +95,8 @@ export default function Navbar() {
             </Link>
           ) : (
             <>
-              <Link href="/login" onClick={() => setBuka(false)} className="text-[#4a4a3f]">
-                Login
-              </Link>
               <Link href="/register" onClick={() => setBuka(false)} className={tombolKecil}>
-                Register
+                Login
               </Link>
             </>
           )}
