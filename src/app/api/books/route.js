@@ -7,6 +7,8 @@ export async function GET(request) {
   const q = sp.get("q") || "";
   const kategori = sp.get("kategori") || "";
   const urut = sp.get("urut") || "terbaru";
+  const hurufMasuk = sp.get("huruf") || "";
+  const huruf = /^[A-Za-z]$/.test(hurufMasuk) ? hurufMasuk : "";
   // daftar tetap (whitelist), karena nama kolom tidak bisa memakai $1
   const orderBy =
     {
@@ -23,9 +25,10 @@ export async function GET(request) {
      LEFT JOIN reviews r ON r.book_id = b.id
      WHERE (b.judul ILIKE $1 OR b.pengarang ILIKE $1)
        AND ($2::text = '' OR b.category_id = NULLIF($2::text, '')::int)
+       AND ($3::text = '' OR b.judul ILIKE $3::text || '%')
      GROUP BY b.id, c.nama
      ORDER BY ${orderBy}`,
-    [`%${q}%`, kategori]
+    [`%${q}%`, kategori, huruf]
   );
   return NextResponse.json(result.rows);
 }
