@@ -238,7 +238,7 @@ export default function AuthPage({ mulai = "login" }) {
 
           {/* Teks saat mode registrasi */}
           <div className={`col-start-1 row-start-1 text-center px-8 ${tampil(!login)}`}>
-            <h2 className="text-4xl font-bold text-white drop-shadow-lg">Welcome, Back!</h2>
+            <h2 className="text-4xl font-bold text-white drop-shadow-lg">Welcome Back!</h2>
             <p className="mt-3 text-white drop-shadow">Sudah punya akun?</p>
             <button
               type="button"
