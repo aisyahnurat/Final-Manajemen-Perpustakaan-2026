@@ -213,7 +213,12 @@ export default function HomePage() {
       <footer className="bg-[#2f3b22] text-[#FFF0C5]">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <p className="text-xl font-bold">📚 PIKUN</p>
+            <div className="flex items-center gap-2">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full">
+                <img src="/logo.png" alt="Logo PIKUN" className="h-8 w-8 object-contain" />
+              </span>
+              <span className="text-xl font-bold">PIKUN</span>
+            </div>
             <p className="mt-2 text-sm text-[#FFF0C5]/80">
               Perpustakaan Intelektual Kaya Usaha Ngelamun.
             </p>
