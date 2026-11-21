@@ -5,6 +5,7 @@
 -- SELECT COUNT(*) FROM categories;
 -- SELECT id, email, role FROM users;
 -- SELECT email, password FROM users;
+-- SELECT judul, cover_url FROM books;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS reviews, loans, announcements, books, categories, users CASCADE;
@@ -155,3 +156,26 @@ VALUES
  ('I''ll Be Gone in the Dark', '978-0-06-231978-4', 'Michelle McNamara', 'Harper', 2018,
    (SELECT id FROM categories WHERE kode = 'NF-KRIM'), 3, 3, 14, 1000)
 ON CONFLICT (isbn) DO NOTHING;
+
+UPDATE books SET cover_url = '/covers/dilan.png' WHERE isbn = '978-602-7870-86-4';
+UPDATE books SET cover_url = '/covers/pride-and-prejudice.png' WHERE isbn = '978-0-14-143951-8';
+UPDATE books SET cover_url = '/covers/bumi.png' WHERE isbn = '978-602-03-0112-9';
+UPDATE books SET cover_url = '/covers/harry-potter.png' WHERE isbn = '978-0-545-06967-0';
+UPDATE books SET cover_url = '/covers/supernova.png' WHERE isbn = '978-602-291-118-0';
+UPDATE books SET cover_url = '/covers/dune.png' WHERE isbn = '978-0-441-17271-9';
+UPDATE books SET cover_url = '/covers/katarsis.png' WHERE isbn = '978-979-22-9756-0';
+UPDATE books SET cover_url = '/covers/da-vinci-code.png' WHERE isbn = '978-0-307-47427-8';
+UPDATE books SET cover_url = '/covers/danur.png' WHERE isbn = '978-602-220-080-2';
+UPDATE books SET cover_url = '/covers/it.png' WHERE isbn = '978-1-5011-4297-0';
+UPDATE books SET cover_url = '/covers/laut-bercerita.png' WHERE isbn = '978-602-424-694-5';
+UPDATE books SET cover_url = '/covers/bumi-manusia.png' WHERE isbn = '978-979-97312-3-4';
+UPDATE books SET cover_url = '/covers/filosofi-teras.png' WHERE isbn = '978-602-412-518-9';
+UPDATE books SET cover_url = '/covers/atomic-habits.png' WHERE isbn = '978-0-7352-1129-2';
+UPDATE books SET cover_url = '/covers/habibie-ainun.png' WHERE isbn = '978-979-1255-13-4';
+UPDATE books SET cover_url = '/covers/becoming.png' WHERE isbn = '978-1-5247-6313-8';
+UPDATE books SET cover_url = '/covers/psychology-of-money.png' WHERE isbn = '978-0-85719-768-9';
+UPDATE books SET cover_url = '/covers/rich-dad-poor-dad.png' WHERE isbn = '978-1-61268-019-4';
+UPDATE books SET cover_url = '/covers/sapiens.png' WHERE isbn = '978-602-424-416-3';
+UPDATE books SET cover_url = '/covers/brief-history-of-time.png' WHERE isbn = '978-0-553-38016-3';
+UPDATE books SET cover_url = '/covers/in-cold-blood.png' WHERE isbn = '978-0-679-74558-7';
+UPDATE books SET cover_url = '/covers/ill-be-gone-in-the-dark.png' WHERE isbn = '978-0-06-231978-4';
