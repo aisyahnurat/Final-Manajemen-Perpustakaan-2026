@@ -192,7 +192,15 @@ export default function HomePage() {
 
         {/* ===== Banner ajakan ===== */}
         <section className="grid overflow-hidden rounded-3xl shadow-lg md:grid-cols-2">
-          <div className="h-48 bg-[url('/perpustakaan.jpg')] bg-cover bg-center md:h-auto" />
+          <div className="flex flex-col justify-center bg-white/40 p-8 backdrop-blur md:p-10">
+            <span aria-hidden="true" className="font-serif text-8xl leading-none text-[#5D9253]/40">“</span>
+            <blockquote className="-mt-4 font-serif text-xl italic leading-relaxed text-[#2f3b22] md:text-2xl">
+              Seorang pembaca menjalani ribuan kehidupan sebelum ia mati. Orang yang tidak pernah membaca hanya menjalani satu kehidupan.
+            </blockquote>
+            <p className="mt-4 text-sm font-semibold tracking-wide text-[#827148]">
+              — George R.R. Martin
+            </p>
+          </div>
           <div className="bg-[#2f3b22] p-8 text-white md:p-10">
             <p className="text-xs font-semibold tracking-[0.25em] text-[#FFF0C5]">MULAI SEKARANG</p>
             <h2 className="mt-2 text-3xl font-bold">Petualangan Bacamu Dimulai di Sini</h2>
