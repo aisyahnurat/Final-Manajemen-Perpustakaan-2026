@@ -20,6 +20,11 @@ function Isian({ label, lebar = "", ...props }) {
     <label className={`block ${lebar}`}>
       <span className="mb-1 block text-xs font-semibold text-[#2f3b22]">{label}</span>
       <input {...props} className={kolom} />
+      {props.maxLength && (
+        <span className="mt-1 block text-right text-xs text-[#4a4a3f]/70">
+          {String(props.value).length} / {props.maxLength}
+        </span>
+      )}
     </label>
   );
 }
@@ -68,6 +73,7 @@ export default function BukuPage() {
   }
 
   function mulaiEdit(b) {
+    setPesan("");
     setEditId(b.id);
     setForm({
       judul: b.judul, isbn: b.isbn, pengarang: b.pengarang,
@@ -116,12 +122,12 @@ export default function BukuPage() {
           </h2>
 
           <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Isian label="Judul" name="judul" value={form.judul} onChange={ubah} required lebar="lg:col-span-2" />
+            <Isian label="Judul" name="judul" maxLength={150} value={form.judul} onChange={ubah} required lebar="lg:col-span-2" />
             <Isian label="ISBN (strip otomatis)" name="isbn" value={form.isbn} onChange={ubah} required disabled={editId !== null} />
-            <Isian label="Pengarang" name="pengarang" value={form.pengarang} onChange={ubah} required />
+            <Isian label="Pengarang" name="pengarang" maxLength={100} value={form.pengarang} onChange={ubah} required />
 
-            <Isian label="Penerbit" name="penerbit" value={form.penerbit} onChange={ubah} required />
-            <Isian label="Tahun terbit" name="tahun_terbit" type="number" value={form.tahun_terbit} onChange={ubah} required />
+            <Isian label="Penerbit" name="penerbit" maxLength={150} value={form.penerbit} onChange={ubah} required />
+            <Isian label="Tahun terbit" name="tahun_terbit" type="number" min="1800" max={new Date().getFullYear()} value={form.tahun_terbit} onChange={ubah} required />
             <label className="block">
               <span className="mb-1 block text-xs font-semibold text-[#2f3b22]">Kategori</span>
               <select name="category_id" value={form.category_id} onChange={ubah} required className={kolom}>
@@ -135,10 +141,10 @@ export default function BukuPage() {
                 ))}
               </select>
             </label>
-            <Isian label="Stok" name="stok_total" type="number" min="0" value={form.stok_total} onChange={ubah} required />
+            <Isian label="Stok" name="stok_total" type="number" min="0" max="100" value={form.stok_total} onChange={ubah} required />
 
-            <Isian label="Maks pinjam (hari)" name="durasi_maks_pinjam" type="number" min="1" value={form.durasi_maks_pinjam} onChange={ubah} required />
-            <Isian label="Denda per hari (Rp)" name="denda_per_hari" type="number" min="0" value={form.denda_per_hari} onChange={ubah} required />
+            <Isian label="Maks pinjam (hari)" name="durasi_maks_pinjam" type="number" min="1" max="365" value={form.durasi_maks_pinjam} onChange={ubah} required />
+            <Isian label="Denda per hari (Rp)" name="denda_per_hari" type="number" min="0" max="100000" value={form.denda_per_hari} onChange={ubah} required />
             <Isian label="Link gambar sampul (opsional)" name="cover_url" value={form.cover_url} onChange={ubah} lebar="sm:col-span-2" />
 
             <label className="block sm:col-span-2 lg:col-span-4">
@@ -169,7 +175,7 @@ export default function BukuPage() {
               {editId && (
                 <button
                   type="button"
-                  onClick={() => { setEditId(null); setForm(kosong); }}
+                  onClick={() => { setEditId(null); setForm(kosong); setPesan(""); }}
                   className="rounded-full border border-[#5e6b45] px-6 py-2 text-sm font-semibold text-[#5e6b45] hover:bg-[#5e6b45] hover:text-white"
                 >
                   Batal
@@ -216,9 +222,13 @@ export default function BukuPage() {
               <tbody className="bg-white/80 text-[#4a4a3f]">
                 {buku.map((b) => (
                   <tr key={b.id} className="border-t border-[#a9ae88]/40">
-                    <td className="px-3 py-2 font-semibold text-[#2f3b22]">{b.judul}</td>
+                    <td className="px-3 py-2 font-semibold text-[#2f3b22]">
+                      <div className="line-clamp-2 max-w-xs" title={b.judul}>{b.judul}</div>
+                    </td>
                     <td className="px-3 py-2">{b.isbn}</td>
-                    <td className="px-3 py-2">{b.pengarang}</td>
+                    <td className="px-3 py-2">
+                      <div className="line-clamp-2 max-w-[12rem]" title={b.pengarang}>{b.pengarang}</div>
+                    </td>
                     <td className="px-3 py-2">{b.kategori}</td>
                     <td className="px-3 py-2">
                       <span

@@ -7,6 +7,13 @@
 -- SELECT email, password FROM users;
 -- SELECT judul, cover_url FROM books;
 -- SELECT judul, LEFT(sinopsis, 40) FROM books ORDER BY id;
+-- SELECT judul, LENGTH(judul) FROM books WHERE LENGTH(judul) > 150;
+-- SELECT id, judul, tahun_terbit FROM books
+-- WHERE tahun_terbit < 1800 OR tahun_terbit > EXTRACT(YEAR FROM CURRENT_DATE);
+-- SELECT judul, stok_total, denda_per_hari, durasi_maks_pinjam FROM books
+-- WHERE stok_total > 100 OR denda_per_hari > 100000 OR durasi_maks_pinjam > 365;
+
+ALTER TABLE books ALTER COLUMN judul TYPE VARCHAR(150);
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS reviews, loans, announcements, books, categories, users CASCADE;
