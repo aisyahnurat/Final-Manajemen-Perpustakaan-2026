@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { validasiBuku } from "@/lib/validasiBuku";
+import { formatIsbn } from "@/lib/validasiIsbn";
 
 export async function GET(request) {
   const sp = new URL(request.url).searchParams;
@@ -41,6 +42,13 @@ export async function POST(request) {
     if (galat) {
       return NextResponse.json({ message: galat }, { status: 400 });
     }
+
+    const hasilIsbn = formatIsbn(b.isbn);
+    if (hasilIsbn.error) {
+      // pakai bentuk response error yang sama seperti validasiBuku-mu
+      return NextResponse.json({ pesan: hasilIsbn.error }, { status: 400 });
+    }
+    b.isbn = hasilIsbn.isbn;
 
     await pool.query(
       `INSERT INTO books
