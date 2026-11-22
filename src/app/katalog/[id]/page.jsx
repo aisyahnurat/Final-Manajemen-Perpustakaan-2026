@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Latar from "@/components/Latar";
+import RakBuku from "@/components/RakBuku";
 
 // warna sampul untuk buku yang belum punya gambar (sama dengan rak buku)
 const WARNA = ["#5D9253", "#827148", "#8a6a6a", "#4f6b8a", "#a9774a", "#6b5b95", "#3f7f7a", "#b0694b"];
@@ -31,6 +32,19 @@ export default function DetailBukuPage() {
     const saved = localStorage.getItem("user");
     if (saved) setUser(JSON.parse(saved));
   }, []);
+
+    const [serupa, setSerupa] = useState([]);
+
+  // buku lain di kategori yang sama, urut rating tertinggi
+  useEffect(() => {
+    if (!data) return;
+    fetch(`/api/books?kategori=${data.buku.category_id}&urut=rating`)
+      .then((r) => r.json())
+      .then((daftar) =>
+        setSerupa(daftar.filter((b) => b.id !== data.buku.id).slice(0, 6))
+      )
+      .catch(() => setSerupa([]));
+  }, [data]);
 
   async function ajukan() {
     const res = await fetch("/api/loans", {
@@ -191,6 +205,13 @@ export default function DetailBukuPage() {
             </div>
           </div>
         </section>
+
+        {serupa.length > 0 && (
+          <section>
+            <h2 className="mb-4 text-xl font-bold text-[#2f3b22]">Buku Serupa</h2>
+            <RakBuku buku={serupa} detail />
+          </section>
+        )}
       </main>
     </Latar>
   );
