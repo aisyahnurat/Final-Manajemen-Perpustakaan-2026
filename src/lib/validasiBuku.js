@@ -27,5 +27,8 @@ export function validasiBuku(b) {
   if (Number(b.durasi_maks_pinjam) <= 0) {
     return "Durasi maksimal pinjam harus lebih dari 0";
   }
+  if (b.sinopsis && String(b.sinopsis).length > 5000) {
+    return "Sinopsis maksimal 5000 karakter";
+  }
   return null; // null = lolos validasi
 }

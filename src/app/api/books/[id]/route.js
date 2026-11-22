@@ -46,6 +46,7 @@ export async function PUT(request, { params }) {
     if (galat) {
       return NextResponse.json({ message: galat }, { status: 400 });
     }
+    const sinopsis = String(b.sinopsis || "").trim() || null;
 
     // stok_tersedia ikut disesuaikan dengan selisih stok_total yang baru
     const result = await pool.query(
@@ -54,12 +55,13 @@ export async function PUT(request, { params }) {
          category_id = $5,
          stok_tersedia = stok_tersedia + ($6::int - stok_total),
          stok_total = $6::int,
-         durasi_maks_pinjam = $7, denda_per_hari = $8, cover_url = $9
-       WHERE id = $10
+         durasi_maks_pinjam = $7, denda_per_hari = $8, cover_url = $9,
+         sinopsis = $10
+       WHERE id = $11
        RETURNING isbn`,
       [b.judul, b.pengarang, b.penerbit, b.tahun_terbit, b.category_id,
        b.stok_total, b.durasi_maks_pinjam, b.denda_per_hari,
-       b.cover_url || null, id]
+       b.cover_url || null, sinopsis, id]
     );
     if (result.rows.length === 0) {
       return NextResponse.json({ message: "Buku tidak ditemukan" }, { status: 404 });

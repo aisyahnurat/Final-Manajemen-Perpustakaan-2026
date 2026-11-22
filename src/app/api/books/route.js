@@ -46,17 +46,19 @@ export async function POST(request) {
     const hasilIsbn = formatIsbn(b.isbn);
     if (hasilIsbn.error) {
       // pakai bentuk response error yang sama seperti validasiBuku-mu
-      return NextResponse.json({ pesan: hasilIsbn.error }, { status: 400 });
+      return NextResponse.json({ message: hasilIsbn.error }, { status: 400 });
     }
     b.isbn = hasilIsbn.isbn;
+
+    const sinopsis = String(b.sinopsis || "").trim() || null; // kosong → NULL
 
     await pool.query(
       `INSERT INTO books
         (judul, isbn, pengarang, penerbit, tahun_terbit, category_id,
-         stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari, cover_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $7, $8, $9, $10)`,
+         stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari, cover_url, sinopsis)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $7, $8, $9, $10, $11)`,
       [b.judul, b.isbn, b.pengarang, b.penerbit, b.tahun_terbit, b.category_id,
-       b.stok_total, b.durasi_maks_pinjam, b.denda_per_hari, b.cover_url || null]
+       b.stok_total, b.durasi_maks_pinjam, b.denda_per_hari, b.cover_url || null, sinopsis]
     );
     return NextResponse.json(
       { message: `Buku "${b.judul}" (ISBN ${b.isbn}) berhasil ditambahkan dengan stok ${b.stok_total}` },

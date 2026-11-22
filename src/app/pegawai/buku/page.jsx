@@ -8,7 +8,7 @@ import Latar from "@/components/Latar";
 const kosong = {
   judul: "", isbn: "", pengarang: "", penerbit: "", tahun_terbit: "",
   category_id: "", stok_total: "", durasi_maks_pinjam: "",
-  denda_per_hari: "", cover_url: "",
+  denda_per_hari: "", cover_url: "", sinopsis: "",
 };
 
 const kolom =
@@ -75,6 +75,7 @@ export default function BukuPage() {
       category_id: b.category_id, stok_total: b.stok_total,
       durasi_maks_pinjam: b.durasi_maks_pinjam,
       denda_per_hari: b.denda_per_hari, cover_url: b.cover_url || "",
+      sinopsis: b.sinopsis || "",
     });
     window.scrollTo({ top: 0, behavior: "smooth" }); // naik ke form
   }
@@ -116,7 +117,7 @@ export default function BukuPage() {
 
           <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Isian label="Judul" name="judul" value={form.judul} onChange={ubah} required lebar="lg:col-span-2" />
-            <Isian label="ISBN" name="isbn" value={form.isbn} onChange={ubah} required disabled={editId !== null} />
+            <Isian label="ISBN (strip otomatis)" name="isbn" value={form.isbn} onChange={ubah} required disabled={editId !== null} />
             <Isian label="Pengarang" name="pengarang" value={form.pengarang} onChange={ubah} required />
 
             <Isian label="Penerbit" name="penerbit" value={form.penerbit} onChange={ubah} required />
@@ -139,6 +140,24 @@ export default function BukuPage() {
             <Isian label="Maks pinjam (hari)" name="durasi_maks_pinjam" type="number" min="1" value={form.durasi_maks_pinjam} onChange={ubah} required />
             <Isian label="Denda per hari (Rp)" name="denda_per_hari" type="number" min="0" value={form.denda_per_hari} onChange={ubah} required />
             <Isian label="Link gambar sampul (opsional)" name="cover_url" value={form.cover_url} onChange={ubah} lebar="sm:col-span-2" />
+
+            <label className="block sm:col-span-2 lg:col-span-4">
+              <span className="mb-1 block text-xs font-semibold text-[#2f3b22]">
+                Sinopsis (opsional)
+              </span>
+              <textarea
+                name="sinopsis"
+                value={form.sinopsis}
+                onChange={ubah}
+                rows={5}
+                maxLength={5000}
+                placeholder="Ringkasan isi buku..."
+                className={kolom}
+              />
+              <span className="mt-1 block text-right text-xs text-[#4a4a3f]/70">
+                {form.sinopsis.length} / 5000
+              </span>
+            </label>
 
             <div className="flex gap-2 sm:col-span-2 lg:col-span-4">
               <button
