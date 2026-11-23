@@ -211,3 +211,183 @@ UPDATE books SET sinopsis = 'Yuval Noah Harari merangkum perjalanan spesies Homo
 UPDATE books SET sinopsis = 'Ditulis khusus untuk pembaca non-ilmuwan dengan meminimalkan rumus matematika rumit, fisikawan teoretis ternama Stephen Hawking mengajak pembaca memahami pertanyaan-pertanyaan paling mendasar tentang alam semesta. Ia menjelaskan evolusi pemikiran manusia dari model geosentris Aristoteles hingga teori relativitas umum Einstein dan mekanika kuantum. Pembaca diajak menelusuri asal-usul alam semesta melalui peristiwa Big Bang, sifat ruang dan waktu yang melengkung, misteri lubang hitam (black holes) yang memancarkan radiasi, hingga pencarian "Teori Segalanya" (Theory of Everything) yang menyatukan seluruh hukum fisika.' WHERE isbn = '978-0-553-38016-3'; -- A Brief History of Time
 UPDATE books SET sinopsis = 'Dianggap sebagai pelopor genre non-fiction novel, karya ini merekonstruksi secara mendetail tragedi pembunuhan brutal terhadap empat anggota keluarga petani terpandang, keluarga Clutter, di kota kecil Holcomb, Kansas, pada November 1959. Berdasarkan ribuan halaman wawancara langsung, Truman Capote menyajikan cerita secara bergantian antara kehidupan damai keluarga korban menjelang tragedi, pelarian dua mantan narapidana pelaku perampokan (Perry Smith dan Richard Hickock), penyelidikan panjang kepolisian Kansas, hingga proses persidangan dan eksekusi mati yang mengupas kondisi psikologis para pelaku.' WHERE isbn = '978-0-679-74558-7'; -- In Cold Blood
 UPDATE books SET sinopsis = 'Buku ini mendokumentasikan penyelidikan mendalam dan obsesif jurnalis kejahatan Michelle McNamara dalam melacak identitas seorang predator seksual dan pembunuh berantai yang meneror negara bagian California sepanjang tahun 1970-an hingga 1980-an—yang ia beri julukan Golden State Killer. Memadukan laporan kepolisian lama, bukti forensik DNA, kesaksian para penyintas, serta refleksi pribadinya tentang dampak obsesi tersebut terhadap hidupnya, McNamara menyusun peta petunjuk yang akhirnya membantu aparat penegak hukum menangkap pelaku aslinya pada tahun 2018, dua tahun setelah penulis wafat.' WHERE isbn = '978-0-06-231978-4'; -- I''ll Be Gone in the Dark
+
+INSERT INTO books(judul, isbn, pengarang, penerbit, tahun_terbit, category_id, stok_total, stok_tersedia, durasi_maks_pinjam, denda_per_hari, sinopsis)
+VALUES
+  ('Once Upon a Broken Heart', '978-623-242-350-3', 'Stephanie Garber', 'Noura Books', 2022,
+   (SELECT id FROM categories WHERE nama = 'Fantasi'),
+   2, 2, 7, 1000,
+   'Seumur hidupnya, Evangeline Fox selalu percaya pada cinta sejati dan akhir bahagia selamanya. Namun, dunianya runtuh saat ia mengetahui bahwa pria yang dicintainya akan segera menikahi saudari tirinya. Putus asa untuk menghentikan pernikahan tersebut, Evangeline nekat membuat kesepakatan dengan Jacks, sang Pangeran Hati yang karismatik namun berbahaya. Sebagai imbalan atas bantuannya, Jacks hanya meminta tiga ciuman yang harus diberikan kapan saja dan kepada siapa saja yang ia tentukan. Setelah ciuman pertama terjadi, Evangeline sadar bahwa berurusan dengan makhluk abadi pembawa kutukan jauh lebih mematikan dari yang ia bayangkan, dan Jacks memiliki rencana besar yang bisa membawanya menuju kebahagiaan abadi atau tragedi paling mengerikan.'),
+  ('Shadow and Bone: Bayang dan Belulang', '978-602-481-554-7', 'Leigh Bardugo', 'Kepustakaan Populer Gramedia', 2021,
+   (SELECT id FROM categories WHERE nama = 'Fantasi'),
+   3, 3, 7, 1000,
+   'Kerajaan Ravka yang dulunya megah kini terbelah dua oleh Shadow Fold, hamparan kabut kegelapan abadi yang dipenuhi monster pemangsa daging bernama Volcra. Alina Starkov, seorang gadis yatim piatu yang bekerja sebagai pembuat peta di pasukan kerajaan, tidak pernah menganggap dirinya istimewa. Namun, ketika resimennya diserang secara brutal saat melintasi Shadow Fold dan nyawa sahabat masa kecilnya, Mal, terancam, Alina tanpa sengaja melepaskan kekuatan sihir cahaya matahari yang telah lama dianggap punah. Kekuatan langka ini menjadikan Alina harapan terakhir untuk menghancurkan kabut kegelapan tersebut, sekaligus membawanya masuk ke lingkungan istana mewah para Grisha yang penuh intrik politik, pengkhianatan, dan ambisi gelap sang pemimpin misterius, The Darkling.'),
+  ('The Name of the Wind (Nama Angin)', '978-602-03-8490-0', 'Patrick Rothfuss', 'Gramedia Pustaka Utama', 2018,
+   (SELECT id FROM categories WHERE nama = 'Fantasi'),
+   4, 4, 7, 1000,
+   'Di sebuah penginapan terpencil di pedesaan, seorang pria berambut merah menyamar sebagai pemilik penginapan sederhana bernama Kote untuk menyembunyikan identitas aslinya sebagai Kvothe—seorang penyihir jenius, musisi ulung, sekaligus tokoh legenda yang kisahnya dibicarakan di seluruh penjuru dunia. Ketika seorang pencatat sejarah menemukannya, Kvothe setuju menceritakan kebenaran di balik berbagai rumor tentang dirinya selama tiga hari. Kisahnya dimulai dari masa kecilnya yang bahagia di kelompok seniman keliling hingga tragedi pembantaian keluarganya oleh makhluk mitos misterius bernama Chandrian, yang mendorongnya bertahan hidup sebagai gelandangan di jalanan kota Tarbean sebelum akhirnya berjuang menembus Universitas untuk mempelajari rahasia sihir simpati dan nama-nama sejati alam semesta.'),
+  ('Malam Terakhir', '978-602-424-823-9', 'Leila S. Chudori', 'Kepustakaan Populer Gramedia', 2018,
+   (SELECT id FROM categories WHERE nama = 'Fiksi Sejarah'),
+   1, 1, 7, 1000,
+   'Malam Terakhir merupakan kumpulan sembilan cerita pendek yang ditulis dengan gaya intelektual, puitis, sekaligus tajam dalam menggugat norma-norma sosial dan politik yang mapan. Berlatar berbagai kota di dunia—mulai dari Jakarta, Paris, Inggris, hingga Kanada—kesembilan kisah di dalamnya menyoroti tema seputar kejujuran, keyakinan, kebebasan berekspresi, kesetiaan perempuan, hingga pergulatan batin manusia saat menghadapi tekanan sejarah dan kematian. Melalui peristiwa-peristiwa krusial seperti dampak tragedi politik 1965 dan gejolak akhir 1980-an, Leila S. Chudori merangkai potret karakter yang berani mempertahankan prinsip hidup dan martabatnya sendiri hingga detik-detik paling menentukan.'),
+  ('Gadis Kretek', '978-979-22-8141-5', 'Ratih Kumala', 'Gramedia Pustaka Utama', 2012,
+   (SELECT id FROM categories WHERE nama = 'Fiksi Sejarah'),
+   3, 3, 7, 1000,
+   'Menjelang ajalnya, Soeraja—pemilik pabrik kretek besar Djagad Raja—terus mengigau memanggil nama seorang perempuan bernama Jeng Yah yang bukan istrinya. Demi memenuhi keinginan terakhir sang ayah sekaligus meredam kecemburuan ibu mereka, ketiga anak Soeraja (Lebas, Karim, dan Tegar) melakukan perjalanan menyusuri berbagai kota di Jawa Tengah untuk mencari sosok Jeng Yah. Pencarian tersebut membuka lembaran sejarah tersembunyi keluarga mereka sejak era penjajahan Belanda, masa pendudukan Jepang, hingga gejolak politik pasca-1965, sekaligus mengungkap persaingan bisnis kretek, rahasia racikan saus tembakau terbaik, dan kisah cinta tragis antara Soeraja dengan Dasiyah, peracik kretek perempuan berbakat di balik kejayaan merek Kretek Gadis.'),
+  ('All the Light We Cannot See', '978-602-03-3290-1', 'Anthony Doerr', 'Gramedia Pustaka Utama', 2016,
+   (SELECT id FROM categories WHERE nama = 'Fiksi Sejarah'),
+   2, 2, 7, 1000,
+   'Berlatar gejolak Perang Dunia II di Eropa, novel ini mengikuti dua garis kehidupan yang perlahan saling bersinggungan di kota benteng pesisir Saint-Malo, Prancis. Marie-Laure adalah gadis Prancis yang kehilangan penglihatannya pada usia enam tahun dan melarikan diri dari Paris bersama ayahnya, seorang kepala tukang kunci Museum Sejarah Alam yang diam-diam membawa permata legendaris bernilai tinggi. Sementara itu di Jerman, Werner Pfennig adalah anak yatim piatu berbakat luar biasa dalam merakit dan memperbaiki radio, yang kecerdasannya membawanya direkrut paksa ke akademi militer Nazi untuk melacak siaran perlawanan musuh. Di tengah kehancuran perang dan pilihan moral yang sulit, keduanya berusaha mempertahankan kemanusiaan mereka.'),
+  ('Wingit', '978-623-00-2153-4', 'Sara Wijayanto', 'Elex Media Komputindo', 2020,
+   (SELECT id FROM categories WHERE nama = 'Horror'),
+   5, 5, 7, 1000,
+   'Wingit merangkum kisah-kisah nyata dari pengalaman penelusuran supranatural Sara Wijayanto ke berbagai bangunan tua, rumah terbengkalai, dan lokasi angker yang menyimpan energi mistis kuat. Melalui kemampuan indra keenamnya, Sara berkomunikasi langsung dengan sosok-sosok tak kasatmata yang menghuni tempat-tempat tersebut untuk mendengarkan kisah kelam di balik keberadaan mereka. Setiap bab tidak hanya menghadirkan ketegangan teror gaib yang mencekam, tetapi juga mengungkap latar belakang sejarah kelam, dendam masa lalu, serta tragedi kemanusiaan yang membuat roh-roh tersebut terperangkap dan enggan meninggalkan lokasi wingit tersebut.'),
+  ('Kisah Tanah Jawa: Jagat Lelembut', '978-979-780-944-7', 'Bonaventura D. Genta, dkk.', 'GagasMedia', 2019,
+   (SELECT id FROM categories WHERE nama = 'Horror'),
+   2, 2, 7, 1000,
+   'Disusun berdasarkan hasil investigasi lapangan dan penelusuran retrokognisi tim Kisah Tanah Jawa, buku ini mengupas secara mendalam seluk-beluk dunia tak kasatmata dan berbagai entitas gaib yang mengakar dalam tradisi masyarakat Jawa. Pembaca diajak menelusuri asal-usul berbagai jenis lelembut—seperti pocong, kuntilanak, genderuwo, tuyul, hingga banaspati—lengkap dengan karakter, habitat, serta pola interaksi mereka dengan manusia. Selain mengulas sisi mistis tempat-tempat angker dan praktik persekutuan gaib seperti pesugihan, buku ini juga memaparkan kearifan lokal tentang batas antara dunia manusia dan dimensi gaib.'),
+  ('The Shining', '978-602-06-2348-1', 'Stephen King', 'Gramedia Pustaka Utama', 2019,
+   (SELECT id FROM categories WHERE nama = 'Horror'),
+   3, 3, 7, 1000,
+   'Jack Torrance, seorang mantan guru yang berjuang mengatasi masalah kecanduan alkohol dan amarah, menerima pekerjaan sebagai penjaga musim dingin di Hotel Overlook yang terisolasi di pegunungan Colorado. Ia membawa serta istrinya, Wendy, dan putra kecil mereka, Danny, yang diam-diam memiliki kemampuan telepati dan prekognisi kuat yang disebut ''the shining''. Saat badai salju memutus seluruh akses jalan keluar selama berbulan-bulan, kekuatan jahat kuno yang bersemayam di dalam sejarah kelam hotel tersebut mulai bangkit, merasuki pikiran Jack yang rapuh, dan mengubahnya menjadi ancaman mematikan bagi keluarganya sendiri.'),
+  ('Salvation of a Saint (Dosa Malaikat)', '978-602-06-5037-1', 'Keigo Higashino', 'Gramedia Pustaka Utama', 2021,
+   (SELECT id FROM categories WHERE nama = 'Misteri & Thriller'),
+   2, 2, 7, 1000,
+   'Yoshitaka Mashiba ditemukan tewas tergeletak di lantai apartemennya akibat keracunan arsenik yang tercampur di dalam kopi yang ia minum. Penyelidikan kepolisian segera mengarah pada istrinya, Ayane, yang memiliki motif kuat karena suaminya berniat menceraikannya. Namun, Ayane memiliki alibi yang sangat kokoh: saat pembunuhan terjadi, ia sedang berada ratusan kilometer jauhnya di kota lain dan tidak ada jejak racun maupun perangkat otomatis di rumah tersebut. Merasa buntu menghadapi kasus yang tampak mustahil dilakukan dari jarak jauh ini, Detektif Kusanagi dan Kaoru Utsumi meminta bantuan Profesor Manabu Yukawa—seorang fisikawan jenius yang dijuluki ''Detektif Galileo''—untuk membongkar trik pembunuhan sempurna tersebut.'),
+  ('Keajaiban Toko Kelontong Namiya', '978-602-06-4829-3', 'Keigo Higashino', 'Gramedia Pustaka Utama', 2020,
+   (SELECT id FROM categories WHERE nama = 'Misteri & Thriller'),
+   5, 5, 7, 1000,
+   'Tiga pemuda berandal—Atsuya, Shota, dan Kohei—bersembunyi di sebuah toko kelontong tua tak berpenghuni setelah melakukan pencurian. Di tengah malam, mereka dikejutkan oleh sepucuk surat yang tiba-tiba diselipkan melalui lubang surat pintu toko, berisi permintaan saran dari seseorang yang hidup di tahun 1980. Mereka segera menyadari bahwa toko milik mendiang Kakek Namiya tersebut memiliki anomali waktu yang menghubungkan masa kini dengan masa 30 tahun silam. Ketika mereka memutuskan membalas surat-surat keluh kesah yang masuk dari masa lalu, setiap saran yang mereka tuliskan ternyata saling terhubung dan mengubah takdir banyak orang.'),
+  ('Gone Girl', '978-602-03-0956-9', 'Gillian Flynn', 'Gramedia Pustaka Utama', 2014,
+   (SELECT id FROM categories WHERE nama = 'Misteri & Thriller'),
+   4, 4, 7, 1000,
+   'Pada pagi hari perayaan ulang tahun pernikahan mereka yang kelima, Nick Dunne pulang ke rumah dan mendapati istrinya, Amy, menghilang secara misterius dengan tanda-tanda perlawanan di ruang tamu. Di bawah sorotan media nasional dan tekanan penyelidikan kepolisian, perilaku Nick yang tampak dingin serta serangkaian kebohongan kecil perlahan menjadikannya tersangka utama pembunuhan istrinya sendiri. Namun, melalui buku harian rahasia Amy dan teka-teki perburuan harta karun tahunan yang ditinggalkannya, terungkap sisi gelap pernikahan mereka serta manipulasi psikologis kejam yang tidak terduga.'),
+  ('Hujan', '978-602-03-2478-4', 'Tere Liye', 'Gramedia Pustaka Utama', 2016,
+   (SELECT id FROM categories WHERE nama = 'Romantis'),
+   5, 5, 7, 1000,
+   'Berlatar tahun 2042 di dunia yang telah mencapai kemajuan teknologi mutakhir, Lail mendatangi sebuah pusat terapi saraf untuk menghapus kenangan menyakitkan dari ingatannya. Melalui proses pemindaian memori, terungkap kisah hidup Lail sejak usia 13 tahun ketika letusan gunung api purba dahsyat menghancurkan kotanya, menewaskan kedua orang tuanya, dan mempertemukannya dengan Esok, pemuda cerdas yang menyelamatkannya. Persahabatan yang tumbuh menjadi cinta di tengah pemulihan bencana itu diuji oleh jarak, pengorbanan besar demi kemanusiaan, dan luka batin yang membuat Lail harus memilih antara melupakan segalanya atau memeluk kenangan pahit tersebut.'),
+  ('Critical Eleven', '978-602-03-1892-9', 'Ika Natassa', 'Gramedia Pustaka Utama', 2015,
+   (SELECT id FROM categories WHERE nama = 'Romantis'),
+   4, 4, 7, 1000,
+   'Dalam dunia penerbangan, ''critical eleven'' adalah sebelas menit paling krusial—tiga menit setelah lepas landas dan delapan menit sebelum mendarat—di mana sebagian besar kecelakaan terjadi. Filosofi itulah yang dirasakan Ale dan Anya ketika pertemuan pertama mereka di pesawat rute Jakarta–Sydney langsung memicu ketertarikan mendalam hingga berujung pada pernikahan bahagia di New York. Namun, setelah lima tahun membangun rumah tangga yang tampak sempurna, sebuah tragedi besar menghantam kehidupan mereka, memicu kesalahpahaman, amarah terpendam, dan keheningan yang menguji apakah cinta mereka mampu bertahan melewati titik paling kritis.'),
+  ('Perahu Kertas', '978-979-1227-78-0', 'Dee Lestari', 'Bentang Pustaka', 2009,
+   (SELECT id FROM categories WHERE nama = 'Romantis'),
+   5, 5, 7, 1000,
+   'Kugy adalah gadis unik yang gemar menulis dongeng dan menghanyutkan surat-surat berisi curahan hatinya dalam bentuk perahu kertas ke aliran sungai, sementara Keenan adalah pelukis muda berbakat yang terpaksa kuliah di fakultas ekonomi demi memenuhi tuntutan ayahnya. Dipertemukan di Bandung melalui sahabat mereka, Eko dan Noni, keduanya langsung terhubung secara emosional dan saling menginspirasi untuk mengejar impian sejati masing-masing. Namun, kesalahpahaman, kehadiran orang ketiga, serta pilihan hidup yang berbeda memisahkan jalan mereka selama bertahun-tahun sebelum takdir kembali mempertemukan keduanya.'),
+  ('Ready Player One', '978-602-03-8359-0', 'Ernest Cline', 'Gramedia Pustaka Utama', 2018,
+   (SELECT id FROM categories WHERE nama = 'Sci-Fi'),
+   2, 2, 7, 1000,
+   'Di tahun 2045, dunia nyata dilanda krisis energi, kemiskinan, dan kehancuran lingkungan yang parah, membuat umat manusia melarikan diri ke dalam OASIS, sebuah semesta realitas virtual raksasa. Ketika pencipta OASIS, James Halliday, wafat, ia meninggalkan wasiat berupa perburuan harta karun digital berhadiah seluruh kekayaannya serta kendali penuh atas OASIS. Wade Watts, seorang remaja miskin yang terobsesi pada budaya pop tahun 1980-an, berhasil memecahkan petunjuk pertama dan seketika menjadi incaran jutaan pemain sekaligus korporasi raksasa kejam yang rela membunuh di dunia nyata demi memenangkan permainan tersebut.'),
+  ('The Martian (Si Penghuni Mars)', '978-602-03-1983-4', 'Andy Weir', 'Gramedia Pustaka Utama', 2015,
+   (SELECT id FROM categories WHERE nama = 'Sci-Fi'),
+   6, 6, 7, 1000,
+   'Saat badai debu dahsyat menghantam lokasi pendaratan misi Ares 3 di planet Mars, astronaut sekaligus ahli botani Mark Watney terhantam puing antena dan dinyatakan tewas oleh rekan-rekannya yang terpaksa melakukan evakuasi darurat. Namun, Mark ternyata selamat dan terbangun sendirian di planet tandus tanpa sarana komunikasi ke Bumi dengan persediaan makanan yang hanya cukup untuk beberapa bulan. Mengandalkan kecerdasan ilmiah, rekayasa teknik, dan humor di tengah keputusasaan, Mark berjuang menanam kentang, memproduksi air, dan mencari cara menghubungi NASA sebelum bantuan berikutnya tiba empat tahun kemudian.'),
+  ('Project Hail Mary', '978-602-06-6847-5', 'Andy Weir', 'Gramedia Pustaka Utama', 2023,
+   (SELECT id FROM categories WHERE nama = 'Sci-Fi'),
+   4, 4, 7, 1000,
+   'Ryland Grace terbangun dari tidur koma di dalam sebuah pesawat luar angkasa tanpa mengingat namanya sendiri maupun alasan mengapa ia berada jutaan kilometer dari Bumi. Seiring ingatannya perlahan pulih, Ryland menyadari bahwa dirinya adalah mantan guru sains yang direkrut untuk misi bunuh diri terakhir umat manusia: menyelamatkan matahari yang energinya terus meredup akibat parasit luar angkasa misterius bernama Astrophage. Di tengah kesendirian di sistem bintang Tau Ceti, Ryland justru menemukan sekutu tak terduga dari peradaban asing yang membantunya memecahkan teka-teki ilmiah demi menyelamatkan dua dunia.'),
+  ('Catatan Seorang Demonstran', '978-979-3330-35-8', 'Soe Hok Gie', 'LP3ES', 2005,
+   (SELECT id FROM categories WHERE nama = 'Biografi & Autobiografi'),
+   6, 6, 14, 1000,
+   'Buku ini memuat kumpulan catatan harian autentik Soe Hok Gie sejak masa remaja di bangku SMA hingga beberapa hari sebelum ia wafat di puncak Gunung Semeru pada tahun 1969. Melalui tulisan-tulisannya yang jujur, kritis, dan reflektif, pembaca diajak menyaksikan langsung dinamika pergolakan politik Indonesia pada akhir era Orde Lama dan awal Orde Baru dari sudut pandang seorang aktivis mahasiswa yang menolak tunduk pada kemunafikan kekuasaan, sekaligus sisi melankolis dan kecintaannya yang mendalam pada persahabatan dan alam bebas.'),
+  ('Shoe Dog: Memoar Pendiri Nike', '978-602-03-8509-9', 'Phil Knight', 'Gramedia Pustaka Utama', 2018,
+   (SELECT id FROM categories WHERE nama = 'Biografi & Autobiografi'),
+   3, 3, 14, 1000,
+   'Dalam memoar yang blak-blakan dan inspiratif ini, pendiri Nike, Phil Knight, mengisahkan perjalanan penuh liku di balik lahirnya salah satu merek olahraga paling ikonik di dunia. Dimulai pada tahun 1962 ketika ia baru lulus kuliah dan meminjam uang 50 dolar dari ayahnya untuk mengimpor sepatu lari berkualitas tinggi dari Jepang, Phil menceritakan berbagai krisis arus kas, pengkhianatan mitra bisnis, tuntutan hukum bernilai jutaan dolar, hingga perannya bersama tim eksentriknya dalam menciptakan inovasi sepatu olahraga yang mengubah industri global.'),
+  ('Steve Jobs', '978-602-8811-66-8', 'Walter Isaacson', 'Bentang Pustaka', 2012,
+   (SELECT id FROM categories WHERE nama = 'Biografi & Autobiografi'),
+   5, 5, 14, 1000,
+   'Disusun berdasarkan lebih dari empat puluh wawancara eksklusif dengan Steve Jobs selama dua tahun terakhir hidupnya serta wawancara dengan lebih dari seratus anggota keluarga, rekan kerja, dan pesaingnya, biografi ini memotret kehidupan sang visioner pendiri Apple secara menyeluruh. Walter Isaacson mengulas perjalanan Jobs sejak masa kecilnya di Silicon Valley, penciptaan komputer pribadi Macintosh, pemecatannya dari Apple, kebangkitannya melalui Pixar dan NeXT, hingga revolusi iPod, iPhone, dan iPad, tanpa menutupi sisi kepribadiannya yang keras, perfeksionis, dan penuh kontradiksi.'),
+  ('Zero to One', '978-602-03-1523-2', 'Peter Thiel & Blake Masters', 'Gramedia Pustaka Utama', 2015,
+   (SELECT id FROM categories WHERE nama = 'Bisnis & Keuangan'),
+   7, 7, 14, 1000,
+   'Berdasarkan catatan kuliah yang disampaikan oleh salah satu pendiri PayPal dan investor awal Facebook, Peter Thiel, di Universitas Stanford, buku ini memaparkan prinsip membangun perusahaan rintisan (startup) yang mampu menciptakan masa depan baru. Thiel berargumen bahwa kemajuan sejati bukan berasal dari meniru kesuksesan yang sudah ada (bergerak dari 1 ke n), melainkan menciptakan inovasi unik yang belum pernah ada sebelumnya (bergerak dari 0 ke 1), membangun monopoli kreatif melalui keunggulan teknologi, serta merumuskan visi jangka panjang yang jelas.'),
+  ('The Intelligent Investor', '978-602-290-049-8', 'Benjamin Graham', 'Serambi Ilmu Semesta', 2015,
+   (SELECT id FROM categories WHERE nama = 'Bisnis & Keuangan'),
+   4, 4, 14, 1000,
+   'Dianggap sebagai kitab suci investasi nilai (value investing) dan menjadi rujukan utama Warren Buffett, karya klasik Benjamin Graham ini mengajarkan strategi berinvestasi di pasar saham dengan meminimalkan risiko kerugian jangka panjang. Graham membedakan secara tegas antara investor yang melakukan analisis fundamental mendalam dengan spekulan yang mengejar keuntungan jangka pendek, memperkenalkan konsep metafora ''Mr. Market'' untuk menggambarkan fluktuasi emosi pasar, serta menekankan prinsip ''margin of safety'' dalam membeli saham di bawah nilai intrinsiknya.'),
+  ('Start With Why', '978-602-06-2883-7', 'Simon Sinek', 'Gramedia Pustaka Utama', 2019,
+   (SELECT id FROM categories WHERE nama = 'Bisnis & Keuangan'),
+   6, 6, 14, 1000,
+   'Simon Sinek meneliti mengapa sejumlah pemimpin dan organisasi—seperti Apple, Martin Luther King Jr., dan Wright Bersaudara—mampu menginspirasi loyalitas mendalam sementara yang lain hanya bersaing lewat harga dan fitur. Melalui kerangka berpikir ''The Golden Circle'' (Why, How, What), Sinek menjelaskan bahwa sebagian besar perusahaan berkomunikasi dari luar ke dalam (dimulai dari apa yang mereka jual), sedangkan pemimpin hebat selalu memulai dari dalam ke luar dengan mengomunikasikan alasan utama, tujuan, dan keyakinan di balik keberadaan organisasi mereka.'),
+  ('Mindhunter: Inside the FBI''s Elite Serial Crime Unit', '978-0-671-52890-4', 'John E. Douglas & Mark Olshaker', 'Pocket Books', 1996,
+   (SELECT id FROM categories WHERE nama = 'Kejahatan Nyata'),
+   3, 3, 14, 1000,
+   'John Douglas, salah satu pelopor unit ilmu perilaku FBI (Behavioral Science Unit), menceritakan pengalamannya selama lebih dari dua dekade mewawancarai langsung puluhan pembunuh berantai dan pelaku kejahatan seksual paling kejam di Amerika Serikat—termasuk Charles Manson, Ted Bundy, dan Ed Kemper. Melalui percakapan mendalam di balik jeruji besi tersebut, Douglas memetakan pola pikir, trauma masa kecil, dan modus operandi para pelaku untuk merumuskan metode modern ''criminal profiling'' yang membantu kepolisian memecahkan berbagai kasus pembunuhan berantai.'),
+  ('Bad Blood: Rahasia dan Kebohongan di Sebuah Startup Silicon Valley', '978-602-06-3262-9', 'John Carreyrou', 'Gramedia Pustaka Utama', 2019,
+   (SELECT id FROM categories WHERE nama = 'Kejahatan Nyata'),
+   5, 5, 14, 1000,
+   'Buku ini mendokumentasikan investigasi jurnalistik pemenang Pulitzer oleh jurnalis The Wall Street Journal, John Carreyrou, mengenai kebangkitan dan kehancuran Theranos, perusahaan bioteknologi yang didirikan oleh Elizabeth Holmes. Sempat dipuja sebagai revolusioner dunia medis dengan valuasi mencapai sembilan miliar dolar berkat klaim alat tes darah portabel dari setetes darah ujung jari, Theranos ternyata menjalankan penipuan sistematis dengan menyembunyikan kegagalan mesin mereka, mengintimidasi para mantan karyawan, dan membahayakan nyawa ribuan pasien.'),
+  ('Say Nothing: A True Story of Murder and Memory in Northern Ireland', '978-0-385-52131-4', 'Patrick Radden Keefe', 'Doubleday', 2019,
+   (SELECT id FROM categories WHERE nama = 'Kejahatan Nyata'),
+   7, 7, 14, 1000,
+   'Pada Desember 1972 di Belfast, Irlandia Utara, Jean McConville—seorang janda berusia 38 tahun dengan sepuluh anak—diculik dari rumahnya oleh sekelompok anggota bertopeng dan tidak pernah kembali. Menggunakan kasus hilangnya McConville sebagai titik awal, Patrick Radden Keefe menelusuri sejarah kelam konflik berdarah ''The Troubles'' selama tiga dekade, mengungkap keterlibatan tokoh-tokoh utama Tentara Republik Irlandia (IRA), budaya bungkam yang mengakar kuat, serta trauma moral yang menghantui para pelaku maupun keluarga korban.'),
+  ('Guns, Germs & Steel: Rangkuman Riwayat Masyarakat Manusia (Bedil, Kuman, & Baja)', '978-602-424-138-4', 'Jared Diamond', 'Kepustakaan Populer Gramedia', 2013,
+   (SELECT id FROM categories WHERE nama = 'Sejarah & Sains'),
+   1, 1, 14, 1000,
+   'Peraih Hadiah Pulitzer ini menjawab pertanyaan fundamental dalam sejarah manusia: mengapa peradaban di Eurasia berkembang jauh lebih cepat dan mampu menaklukkan benua lain, bukan sebaliknya? Dengan memadukan geografi, biologi evolusioner, antropologi, dan teknologi, Jared Diamond membuktikan bahwa ketimpangan kekuasaan antarperadaban sejak 11.000 SM tidak disebabkan oleh keunggulan ras atau kecerdasan genetik, melainkan oleh faktor lingkungan seperti ketersediaan tanaman dan hewan yang dapat didomestikasi, penyebaran kuman penyakit mematikan, serta penguasaan teknologi baja dan tulisan.'),
+  ('Cosmos', '978-602-424-224-4', 'Carl Sagan', 'Kepustakaan Populer Gramedia', 2016,
+   (SELECT id FROM categories WHERE nama = 'Sejarah & Sains'),
+   6, 6, 14, 1000,
+   'Diadaptasi dari serial dokumenter televisi legendaris, astronom Carl Sagan mengajak pembaca melakukan perjalanan melintasi ruang dan waktu untuk memahami tempat umat manusia di dalam alam semesta yang luas. Dengan bahasa yang puitis namun tetap berpijak kuat pada metode ilmiah, Sagan mengulas sejarah perkembangan sains dari perpustakaan kuno Aleksandria, evolusi kehidupan di Bumi, anatomi tata surya, kelahiran serta kematian bintang-bintang, hingga pencarian peradaban cerdas di luar angkasa dan pentingnya menjaga kelangsungan planet kita.'),
+  ('The Selfish Gene (Gen Egois)', '978-602-424-728-7', 'Richard Dawkins', 'Kepustakaan Populer Gramedia', 2017,
+   (SELECT id FROM categories WHERE nama = 'Sejarah & Sains'),
+   3, 3, 14, 1000,
+   'Dalam karya klasik biologi evolusioner ini, Richard Dawkins menawarkan cara pandang baru yang revolusioner terhadap teori seleksi alam Charles Darwin. Alih-alih melihat spesies atau individu sebagai unit utama evolusi, Dawkins menjelaskan bahwa gen-lah yang menjadi unit dasar seleksi alam yang berupaya mereplikasi dirinya dari generasi ke generasi, sementara organisme hidup hanyalah ''mesin penyintas'' bagi gen-gen tersebut. Melalui pendekatan ini, ia menguraikan asal-usul perilaku egois maupun altruisme di dunia hewan serta memperkenalkan konsep ''meme'' dalam evolusi budaya manusia.'),
+  ('Sebuah Seni untuk Bersikap Bodo Amat', '978-602-452-698-6', 'Mark Manson', 'Grasindo', 2018,
+   (SELECT id FROM categories WHERE nama = 'Self-Improvement'),
+   5, 5, 14, 1000,
+   'Melawan arus buku pengembangan diri konvensional yang selalu menuntut pikiran positif tanpa henti, Mark Manson menawarkan pendekatan yang jujur, lugas, dan realistis tentang cara menjalani hidup yang bermakna. Ia berpendapat bahwa manusia memiliki kapasitas perhatian yang terbatas, sehingga kunci ketenangan batin bukanlah berusaha peduli pada segala hal, melainkan memilih dengan bijak hal-hal apa saja yang benar-benar layak diperjuangkan, menerima keterbatasan serta penderitaan sebagai bagian alami kehidupan, dan bertanggung jawab penuh atas setiap pilihan nilai yang kita ambil.'),
+  ('Berani Tidak Disukai', '978-602-06-3321-3', 'Ichiro Kishimi & Fumitake Koga', 'Gramedia Pustaka Utama', 2019,
+   (SELECT id FROM categories WHERE nama = 'Self-Improvement'),
+   7, 7, 14, 1000,
+   'Dikemas dalam bentuk dialog mendalam selama lima malam antara seorang pemuda yang dipenuhi keraguan hidup dengan seorang filsuf di pinggiran kota Kyoto, buku ini memperkenalkan ajaran psikologi Alfred Adler yang praktis dan membebaskan. Pembaca diajak memahami bahwa manusia tidak dikendalikan oleh trauma masa lalu, melainkan oleh tujuan yang mereka pilih saat ini; bahwa semua persoalan hidup bersumber dari hubungan interpersonal; dan bahwa kebebasan sejati hanya dapat diraih ketika seseorang memiliki keberanian untuk tidak bergantung pada pengakuan orang lain.'),
+  ('Deep Work', '978-602-291-668-0', 'Cal Newport', 'Bentang Pustaka', 2020,
+   (SELECT id FROM categories WHERE nama = 'Self-Improvement'),
+   4, 4, 14, 1000,
+   'Di tengah gempuran notifikasi media sosial, surel, dan gangguan digital yang memecah perhatian setiap beberapa menit, Cal Newport menjelaskan mengapa kemampuan untuk fokus penuh tanpa distraksi—yang ia sebut sebagai ''deep work''—menjadi keterampilan paling berharga sekaligus semakin langka di era ekonomi modern. Melalui kombinasi riset neurosains dan studi kasus nyata, Newport membagikan empat aturan praktis untuk melatih konsentrasi mendalam, merancang rutinitas kerja yang terstruktur, membatasi penggunaan media sosial, dan menghasilkan karya intelektual bermutu tinggi dalam waktu lebih efisien.')
+ON CONFLICT (isbn) DO UPDATE SET
+  judul = EXCLUDED.judul,
+  pengarang = EXCLUDED.pengarang,
+  penerbit = EXCLUDED.penerbit,
+  tahun_terbit = EXCLUDED.tahun_terbit,
+  category_id = EXCLUDED.category_id,
+  sinopsis = EXCLUDED.sinopsis;
+
+BEGIN;
+
+UPDATE books SET cover_url = '/covers/once-upon.png' WHERE isbn = '978-623-242-350-3';
+UPDATE books SET cover_url = '/covers/shadow-bone.png' WHERE isbn = '978-602-481-554-7';
+UPDATE books SET cover_url = '/covers/the-name-of-the-wind.png' WHERE isbn = '978-602-03-8490-0';
+UPDATE books SET cover_url = '/covers/malam-terakhir.png' WHERE isbn = '978-602-424-823-9';
+UPDATE books SET cover_url = '/covers/gadis-kretek.png' WHERE isbn = '978-979-22-8141-5';
+UPDATE books SET cover_url = '/covers/all-the-light.png' WHERE isbn = '978-602-03-3290-1';
+UPDATE books SET cover_url = '/covers/wingit.png' WHERE isbn = '978-623-00-2153-4';
+UPDATE books SET cover_url = '/covers/kisah-tanah-jawa.png' WHERE isbn = '978-979-780-944-7';
+UPDATE books SET cover_url = '/covers/the-shining.png' WHERE isbn = '978-602-06-2348-1';
+UPDATE books SET cover_url = '/covers/salvation.png' WHERE isbn = '978-602-06-5037-1';
+UPDATE books SET cover_url = '/covers/keajaiban-toko-kelontong.png' WHERE isbn = '978-602-06-4829-3';
+UPDATE books SET cover_url = '/covers/gone-girl.png' WHERE isbn = '978-602-03-0956-9';
+UPDATE books SET cover_url = '/covers/hujan.png' WHERE isbn = '978-602-03-2478-4';
+UPDATE books SET cover_url = '/covers/critical-eleven.png' WHERE isbn = '978-602-03-1892-9';
+UPDATE books SET cover_url = '/covers/perahu-kertas.png' WHERE isbn = '978-979-1227-78-0';
+UPDATE books SET cover_url = '/covers/ready-player-one.png' WHERE isbn = '978-602-03-8359-0';
+UPDATE books SET cover_url = '/covers/the-martian.png' WHERE isbn = '978-602-03-1983-4';
+UPDATE books SET cover_url = '/covers/project-hail-mary.png' WHERE isbn = '978-602-06-6847-5';
+UPDATE books SET cover_url = '/covers/catatan-seorang-demonstran.png' WHERE isbn = '978-979-3330-35-8';
+UPDATE books SET cover_url = '/covers/shoe-dog.png' WHERE isbn = '978-602-03-8509-9';
+UPDATE books SET cover_url = '/covers/steve-jobs.png' WHERE isbn = '978-602-8811-66-8';
+UPDATE books SET cover_url = '/covers/zero-to-one.png' WHERE isbn = '978-602-03-1523-2';
+UPDATE books SET cover_url = '/covers/the-intelligent-investor.png' WHERE isbn = '978-602-290-049-8';
+UPDATE books SET cover_url = '/covers/start-with-why.png' WHERE isbn = '978-602-06-2883-7';
+UPDATE books SET cover_url = '/covers/mindhunter.png' WHERE isbn = '978-0-671-52890-4';
+UPDATE books SET cover_url = '/covers/bad-blood.png' WHERE isbn = '978-602-06-3262-9';
+UPDATE books SET cover_url = '/covers/say-nothing.png' WHERE isbn = '978-0-385-52131-4';
+UPDATE books SET cover_url = '/covers/guns-germs-steel.png' WHERE isbn = '978-602-424-138-4';
+UPDATE books SET cover_url = '/covers/kosmos.png' WHERE isbn = '978-602-424-224-4';
+UPDATE books SET cover_url = '/covers/the-selfish-gene.png' WHERE isbn = '978-602-424-728-7';
+UPDATE books SET cover_url = '/covers/sebuah-seni.png' WHERE isbn = '978-602-452-698-6';
+UPDATE books SET cover_url = '/covers/berani-tidak-disukai.png' WHERE isbn = '978-602-06-3321-3';
+UPDATE books SET cover_url = '/covers/deep-work.png' WHERE isbn = '978-602-291-668-0';
+
+COMMIT;
