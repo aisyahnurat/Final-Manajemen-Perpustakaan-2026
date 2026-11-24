@@ -36,7 +36,7 @@ export async function POST(request) {
     await pool.query(
       `INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
        VALUES ($1, $2, $3, 'mahasiswa', $4)`,
-      [nama, email, password, nimBersih]
+      [nama, email, hash, nimBersih]
     );
 
     return NextResponse.json(
