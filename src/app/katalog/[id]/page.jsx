@@ -5,9 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Latar from "@/components/Latar";
 import RakBuku from "@/components/RakBuku";
-
-// warna sampul untuk buku yang belum punya gambar (sama dengan rak buku)
-const WARNA = ["#5D9253", "#827148", "#8a6a6a", "#4f6b8a", "#a9774a", "#6b5b95", "#3f7f7a", "#b0694b"];
+import Buku3D from "@/components/Buku3D";
 
 // ubah angka rating jadi bintang, misalnya 4 -> ★★★★☆
 const bintang = (n) => "★".repeat(n) + "☆".repeat(5 - n);
@@ -91,22 +89,7 @@ export default function DetailBukuPage() {
 
         {/* Bagian atas: sampul + identitas buku */}
         <section className="grid items-center gap-8 md:grid-cols-[260px_1fr]">
-          <div className="mx-auto w-48 md:w-full">
-            <div className="relative aspect-[2/3] overflow-hidden rounded-l-sm rounded-r-xl shadow-[8px_14px_28px_rgba(0,0,0,0.4)]">
-              {buku.cover_url ? (
-                <img src={buku.cover_url} alt={buku.judul} className="h-full w-full object-cover" />
-              ) : (
-                <div
-                  className="flex h-full flex-col justify-between p-4 pl-6 text-white"
-                  style={{ backgroundColor: WARNA[buku.id % WARNA.length] }}
-                >
-                  <span className="text-lg font-bold leading-tight">{buku.judul}</span>
-                  <span className="text-sm opacity-90">{buku.pengarang}</span>
-                </div>
-              )}
-              <span className="absolute inset-y-0 left-0 w-2 bg-black/20" />
-            </div>
-          </div>
+          <Buku3D buku={buku} />
 
           <div>
             <span className="inline-block rounded-full bg-[#a9ae88] px-3 py-1 text-xs font-semibold text-white">
