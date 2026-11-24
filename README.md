@@ -123,9 +123,7 @@ Buka [http://localhost:3000](http://localhost:3000). Setiap kali `.env.local` di
 | Admin | `admin@unhas.ac.id` | `admin123` |
 | Pegawai | `pegawai@unhas.ac.id` | `pegawai123` |
 | Mahasiswa | daftar sendiri lewat halaman **Register** | _(sesuai isian)_ |
-
-<!-- TODO (Aisyah): setelah akun demo mahasiswa dibuat di schema.sql, tambahkan baris di sini, misalnya:
-| Mahasiswa | `emailnya@unhas.ac.id` | `passwordnya` | -->
+| Mahasiswa (demo) | `mhs01@unhas.ac.id` sampai `mhs10@unhas.ac.id` | `mahasiswa123` |
 
 Password disimpan dalam bentuk hash bcrypt. Akun-akun di atas adalah data uji.
 
