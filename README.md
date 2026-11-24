@@ -41,7 +41,7 @@
 - **Filter kategori** (dikelompokkan menjadi Fiksi dan Non-Fiksi) dan **urutan** terbaru, tahun terbit, atau rating tertinggi.
 - **Telusuri abjad (A–Z):** menampilkan buku yang judulnya diawali huruf tertentu.
 - **Buku populer** dan koleksi di beranda, ditampilkan seperti rak buku.
-- **Detail buku:** sampul, sinopsis, rincian, rating rata-rata, ulasan, dan **rekomendasi buku serupa** (satu kategori, urut rating tertinggi).
+- **Detail buku:** sampul 3D yang bisa dibalik (sisi belakang menampilkan cuplikan sinopsis, pengarang, penerbit, dan ISBN), sinopsis, rincian, rating rata-rata, ulasan, dan **rekomendasi buku serupa** (satu kategori, urut rating tertinggi).
 - **Responsif:** dirancang mobile-first dengan Tailwind CSS, nyaman di HP, tablet, maupun desktop.
 
 ### Aturan sistem
@@ -92,7 +92,7 @@ npm install
 ### 3. Siapkan database
 1. Buka pgAdmin, lalu buat database baru, misalnya `perpustakaan`.
 2. Buka **Query Tool** pada database tersebut, lalu jalankan seluruh isi file **`database/schema.sql`**.
-   File ini membuat semua tabel dan mengisi data awal: akun Admin dan Pegawai, 11 sub-kategori buku, serta koleksi buku contoh lengkap dengan sinopsis dan sampul.
+   File ini membuat semua tabel dan mengisi data awal: akun Admin, Pegawai, dan 10 mahasiswa demo, 11 sub-kategori, 55 buku (lengkap dengan sinopsis dan sampul), serta 35 ulasan.
 
 > ⚠️ `schema.sql` diawali dengan `DROP TABLE`, sehingga menjalankannya ulang akan **mereset seluruh data**.
 
@@ -176,3 +176,4 @@ src/
 - **Isi otomatis dari ISBN:** mengambil judul, penulis, penerbit, dan tahun terbit dari layanan seperti Open Library saat ISBN diketik, dengan isian manual sebagai cadangan.
 - **Pratinjau isi buku:** cuplikan beberapa halaman sebelum meminjam. Ini memerlukan izin penerbit, sehingga untuk saat ini calon peminjam dibantu oleh sinopsis dan ulasan.
 - Menampilkan jumlah ulasan di samping rating pada kartu buku.
+- Unggah gambar sampul belakang asli sebagai opsi (kolom tambahan di data buku). Saat ini sisi belakang dibuat otomatis dari data buku.
