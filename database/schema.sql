@@ -1,20 +1,3 @@
--- SELECT * FROM users;
--- SELECT * FROM categories;
--- SELECT * FROM books;
--- SELECT COUNT(*) FROM books;
--- SELECT COUNT(*) FROM categories;
--- SELECT id, email, role FROM users;
--- SELECT email, password FROM users;
--- SELECT judul, cover_url FROM books;
--- SELECT judul, LEFT(sinopsis, 40) FROM books ORDER BY id;
--- SELECT judul, LENGTH(judul) FROM books WHERE LENGTH(judul) > 150;
--- SELECT id, judul, tahun_terbit FROM books
--- WHERE tahun_terbit < 1800 OR tahun_terbit > EXTRACT(YEAR FROM CURRENT_DATE);
--- SELECT judul, stok_total, denda_per_hari, durasi_maks_pinjam FROM books
--- WHERE stok_total > 100 OR denda_per_hari > 100000 OR durasi_maks_pinjam > 365;
-
-ALTER TABLE books ALTER COLUMN judul TYPE VARCHAR(150);
-
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 DROP TABLE IF EXISTS reviews, loans, announcements, books, categories, users CASCADE;
 
@@ -35,13 +18,14 @@ CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     nama VARCHAR(100) NOT NULL UNIQUE,
     kode VARCHAR(20)  NOT NULL UNIQUE,
-    deskripsi TEXT
+    deskripsi TEXT,
+	kelompok VARCHAR(20) NOT NULL CHECK (kelompok IN ('Fiksi', 'Non-Fiksi'))
 );
 
 -- 3. BOOKS
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
-    judul VARCHAR(200) NOT NULL,
+    judul VARCHAR(150) NOT NULL,
     isbn VARCHAR(20) NOT NULL UNIQUE,
     pengarang VARCHAR(150) NOT NULL,
     penerbit VARCHAR(150) NOT NULL,
@@ -99,7 +83,7 @@ CREATE TABLE reviews (
 );
 
 -- DATA
-INSERT INTO (nama_lengkap, email, password, role, nomor_identitas)
+INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
 VALUES
 	('Admin Perpustakaan', 'admin@unhas.ac.id', crypt('admin123', gen_salt('bf', 10)), 'admin', 'ADM001'),
 	('Pegawai Perpustakaan', 'pegawai@unhas.ac.id', crypt('pegawai123', gen_salt('bf', 10)), 'pegawai', 'PGW001');
@@ -354,8 +338,6 @@ ON CONFLICT (isbn) DO UPDATE SET
   category_id = EXCLUDED.category_id,
   sinopsis = EXCLUDED.sinopsis;
 
-BEGIN;
-
 UPDATE books SET cover_url = '/covers/once-upon.png' WHERE isbn = '978-623-242-350-3';
 UPDATE books SET cover_url = '/covers/shadow-bone.png' WHERE isbn = '978-602-481-554-7';
 UPDATE books SET cover_url = '/covers/the-name-of-the-wind.png' WHERE isbn = '978-602-03-8490-0';
@@ -389,5 +371,95 @@ UPDATE books SET cover_url = '/covers/the-selfish-gene.png' WHERE isbn = '978-60
 UPDATE books SET cover_url = '/covers/sebuah-seni.png' WHERE isbn = '978-602-452-698-6';
 UPDATE books SET cover_url = '/covers/berani-tidak-disukai.png' WHERE isbn = '978-602-06-3321-3';
 UPDATE books SET cover_url = '/covers/deep-work.png' WHERE isbn = '978-602-291-668-0';
+
+-- Data demo: 10 akun mahasiswa + peminjaman selesai + ulasan
+-- Kata sandi semua akun mahasiswa demo: mahasiswa123 (di-hash bcrypt oleh pgcrypto, sama seperti akun admin dan pegawai)
+-- Aturan sistem: ulasan hanya untuk peminjaman berstatus 'Selesai', satu ulasan per peminjaman.
+-- Karena itu tiap ulasan dibuatkan satu peminjaman Selesai (stok tidak terpengaruh).
+-- Aman dijalankan ulang: akun dan pasangan (mahasiswa, buku) yang sudah ada dilewati.
+-- Buku diacu lewat ISBN; baris yang ISBN-nya tidak ada di database dilewati secara diam-diam,
+-- jadi cek jumlah ulasan dengan query di bagian paling bawah.
+
+BEGIN;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
+VALUES
+  ('Nabila Putri', 'mhs01@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259001'),
+  ('Raka Aditya', 'mhs02@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259002'),
+  ('Salsabila', 'mhs03@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259003'),
+  ('Fadhil Akbar', 'mhs04@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259004'),
+  ('Dewi Lestari', 'mhs05@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259005'),
+  ('Rizky Saputra', 'mhs06@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259006'),
+  ('Putri Maharani', 'mhs07@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259007'),
+  ('Aryo Wibowo', 'mhs08@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259008'),
+  ('Fadilah Hasan', 'mhs09@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259009'),
+  ('Alif Rahman', 'mhs10@unhas.ac.id', crypt('mahasiswa123', gen_salt('bf', 10)), 'mahasiswa', 'A071259010')
+ON CONFLICT (email) DO NOTHING;
+
+WITH data(email, isbn, rating, komentar, hari_lalu) AS (
+  VALUES
+  ('mhs01@unhas.ac.id', '978-979-22-8141-5', 5, 'Ceritanya memikat, bikin penasaran dari bab awal sampai akhir. Latar kota-kotanya terasa hidup.', 95),
+  ('mhs02@unhas.ac.id', '978-979-22-8141-5', 4, 'Alurnya bolak-balik antar zaman tapi tetap mudah diikuti.', 70),
+  ('mhs03@unhas.ac.id', '978-979-22-8141-5', 5, 'Suka banget dengan sejarah industri kreteknya, jadi tahu banyak hal baru.', 40),
+  ('mhs04@unhas.ac.id', '978-602-03-2478-4', 4, 'Dunia masa depannya menarik dan ceritanya menyentuh.', 88),
+  ('mhs05@unhas.ac.id', '978-602-03-2478-4', 5, 'Endingnya bikin haru, cocok dibaca sambil hujan-hujan.', 52),
+  ('mhs01@unhas.ac.id', '978-602-03-2478-4', 3, 'Bagus, tapi menurutku beberapa bagian terlalu cepat berpindah.', 33),
+  ('mhs06@unhas.ac.id', '978-602-03-1892-9', 4, 'Ringan dibaca dan konfliknya dekat dengan kehidupan nyata.', 61),
+  ('mhs02@unhas.ac.id', '978-602-03-1892-9', 5, 'Sekali duduk langsung habis. Dialognya natural.', 27),
+  ('mhs07@unhas.ac.id', '978-979-1227-78-0', 5, 'Klasik yang tidak membosankan walau dibaca ulang.', 110),
+  ('mhs03@unhas.ac.id', '978-602-03-8359-0', 4, 'Referensi budaya pop-nya seru terutama buat yang suka game.', 45),
+  ('mhs08@unhas.ac.id', '978-602-03-8359-0', 3, 'Idenya keren, tapi ada bagian yang terasa agak panjang.', 20),
+  ('mhs09@unhas.ac.id', '978-602-03-1983-4', 5, 'Humor dan sainsnya seimbang, susah berhenti membaca.', 78),
+  ('mhs04@unhas.ac.id', '978-602-03-1983-4', 5, 'Seru melihat cara tokohnya memecahkan masalah satu per satu.', 36),
+  ('mhs10@unhas.ac.id', '978-602-03-1983-4', 4, 'Banyak istilah teknis, tapi tetap enak diikuti.', 18),
+  ('mhs09@unhas.ac.id', '978-602-06-6847-5', 5, 'Kejutannya di tengah cerita benar-benar tidak terduga.', 30),
+  ('mhs05@unhas.ac.id', '978-602-06-6847-5', 4, 'Ceritanya hangat dan penuh harapan.', 24),
+  ('mhs06@unhas.ac.id', '978-602-06-2348-1', 4, 'Seramnya pelan-pelan tapi menekan sampai akhir.', 84),
+  ('mhs10@unhas.ac.id', '978-602-06-2348-1', 3, 'Awalnya terasa lambat, tapi bagian hotelnya mencekam.', 47),
+  ('mhs07@unhas.ac.id', '978-602-03-0956-9', 4, 'Alurnya penuh kejutan dan membuat ingin terus membuka halaman berikutnya.', 58),
+  ('mhs01@unhas.ac.id', '978-602-03-0956-9', 2, 'Alurnya menarik, tapi karakternya terlalu menyebalkan buatku.', 21),
+  ('mhs08@unhas.ac.id', '978-623-00-2153-4', 4, 'Kisah nyata yang bikin merinding, jangan dibaca sendirian malam hari.', 66),
+  ('mhs02@unhas.ac.id', '978-602-291-668-0', 5, 'Praktis, langsung bisa dicoba untuk mengatur jadwal belajar.', 92),
+  ('mhs05@unhas.ac.id', '978-602-291-668-0', 4, 'Konsepnya jelas, contoh-contohnya relevan untuk mahasiswa.', 38),
+  ('mhs10@unhas.ac.id', '978-602-291-668-0', 4, 'Perlu disiplin untuk menerapkannya, tapi hasilnya terasa.', 16),
+  ('mhs03@unhas.ac.id', '978-602-06-3321-3', 5, 'Dialognya membuka sudut pandang baru soal hubungan dengan orang lain.', 100),
+  ('mhs06@unhas.ac.id', '978-602-06-3321-3', 5, 'Mengubah cara pandangku tentang pengakuan orang lain.', 55),
+  ('mhs07@unhas.ac.id', '978-602-06-3321-3', 4, 'Bahasanya mudah dicerna walau topiknya berat.', 29),
+  ('mhs08@unhas.ac.id', '978-602-452-698-6', 4, 'Gaya bahasanya blak-blakan dan jujur.', 73),
+  ('mhs09@unhas.ac.id', '978-602-452-698-6', 3, 'Ada benarnya, tapi sebagian terasa berulang.', 42),
+  ('mhs01@unhas.ac.id', '978-0-7352-1129-2', 5, 'Langkah-langkah kecilnya mudah dipraktikkan setiap hari.', 105),
+  ('mhs04@unhas.ac.id', '978-0-7352-1129-2', 5, 'Konsep kebiasaan kecil yang konsisten itu benar-benar berguna.', 63),
+  ('mhs07@unhas.ac.id', '978-0-7352-1129-2', 4, 'Isinya padat, cocok buat yang ingin memperbaiki rutinitas.', 25),
+  ('mhs09@unhas.ac.id', '978-602-8811-66-8', 4, 'Tebal, tapi isinya kaya dan memotivasi.', 81),
+  ('mhs02@unhas.ac.id', '978-602-03-1523-2', 4, 'Pandangannya tentang startup terasa segar dan menantang.', 50),
+  ('mhs03@unhas.ac.id', '978-602-424-224-4', 4, 'Penjelasan alam semesta yang puitis namun tetap ilmiah.', 35)
+),
+pinjam AS (
+  INSERT INTO loans
+    (user_id, book_id, status, tanggal_pengajuan, tanggal_pinjam,
+     tanggal_jatuh_tempo, tanggal_kembali, diproses_oleh)
+  SELECT u.id, b.id, 'Selesai',
+         (CURRENT_DATE - d.hari_lalu - 1)::timestamp,
+         CURRENT_DATE - d.hari_lalu,
+         CURRENT_DATE - d.hari_lalu + 14,
+         CURRENT_DATE - d.hari_lalu + 10,
+         (SELECT id FROM users WHERE email = 'pegawai@unhas.ac.id')
+  FROM data d
+  JOIN users u ON u.email = d.email
+  JOIN books b ON b.isbn  = d.isbn
+  WHERE NOT EXISTS (
+    SELECT 1 FROM loans l WHERE l.user_id = u.id AND l.book_id = b.id
+  )
+  RETURNING id, user_id, book_id, tanggal_kembali
+)
+INSERT INTO reviews (loan_id, user_id, book_id, rating, komentar, created_at)
+SELECT p.id, p.user_id, p.book_id, d.rating, d.komentar,
+       (p.tanggal_kembali + 1)::timestamp
+FROM pinjam p
+JOIN users u ON u.id = p.user_id
+JOIN books b ON b.id = p.book_id
+JOIN data  d ON d.email = u.email AND d.isbn = b.isbn;
 
 COMMIT;
