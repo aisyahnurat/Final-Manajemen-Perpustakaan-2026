@@ -110,7 +110,7 @@ export default function MahasiswaPage() {
         </div>
 
         {p.alasan_penolakan && (
-          <p className="mt-2 text-sm text-red-700">Alasan penolakan: {p.alasan_penolakan}</p>
+          <p className="mt-2 text-sm text-red-700 [overflow-wrap:anywhere]">Alasan penolakan: {p.alasan_penolakan}</p>
         )}
 
         <dl className="mt-3 grid grid-cols-2 gap-2 text-sm">
