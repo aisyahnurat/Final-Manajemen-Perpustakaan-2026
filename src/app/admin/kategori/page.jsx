@@ -33,7 +33,7 @@ export default function KategoriPage() {
     const res = await fetch(url, {
       method: editId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({...form, admin_id: user.id}),
     });
     const data = await res.json();
     setBerhasil(res.ok);
@@ -53,7 +53,7 @@ export default function KategoriPage() {
 
   async function hapus(id) {
     if (!confirm("Hapus kategori ini?")) return;
-    const res = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/categories/${id}?admin_id=${user.id}`, { method: "DELETE" });
     const data = await res.json();
     setBerhasil(res.ok);
     setPesan(data.message);
@@ -177,14 +177,14 @@ export default function KategoriPage() {
                     <td className="whitespace-nowrap px-3 py-2 font-mono text-xs">{k.kode}</td>
                     <td className="px-3 py-2">
                       <span
-                        className="rounded-full px-2 py-0.5 text-xs font-semibold text-white"
+                        className="whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold text-white"
                         style={{ backgroundColor: k.kelompok === "Fiksi" ? "#827148" : "#5D9253" }}
                       >
                         {k.kelompok}
                       </span>
                     </td>
                     <td className="px-3 py-2 font-semibold text-[#2f3b22]">{k.nama}</td>
-                    <td className="px-3 py-2">{k.deskripsi}</td>
+                    <td className="px-3 py-2 [overflow-wrap:anywhere]">{k.deskripsi}</td>
                     <td className="px-3 py-2">{k.jumlah_buku}</td>
                     <td className="whitespace-nowrap px-3 py-2">
                       <button
