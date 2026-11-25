@@ -55,9 +55,9 @@ export default function DetailPengumumanPage() {
             <span className="text-sm text-[#4a4a3f]/70">{data.tanggal_rilis}</span>
           </div>
 
-          <h1 className="mt-4 text-2xl font-bold text-[#2f3b22] md:text-4xl">{data.judul}</h1>
+          <h1 className="mt-4 text-2xl font-bold text-[#2f3b22] [overflow-wrap:anywhere] md:text-4xl">{data.judul}</h1>
 
-          <p className="mt-6 whitespace-pre-line break-words leading-relaxed text-[#4a4a3f]">
+          <p className="mt-6 whitespace-pre-line [overflow-wrap:anywhere] leading-relaxed text-[#4a4a3f]">
             {data.konten}
           </p>
         </article>

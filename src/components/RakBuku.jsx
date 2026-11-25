@@ -47,8 +47,8 @@ export default function RakBuku({ buku, urutan = false, detail = false }) {
                       className="flex h-full flex-col justify-between p-2 pl-3 text-white"
                       style={{ backgroundColor: WARNA[b.id % WARNA.length] }}
                     >
-                      <span className="line-clamp-4 pr-7 text-[10px] font-bold leading-tight md:text-xs">{b.judul}</span>
-                      <span className="line-clamp-2 text-[9px] opacity-90 md:text-[11px]">{b.pengarang}</span>
+                      <span className="line-clamp-4 pr-7 text-[10px] font-bold leading-tight md:text-xs [overflow-wrap:anywhere]">{b.judul}</span>
+                      <span className="line-clamp-2 text-[9px] opacity-90 md:text-[11px] [overflow-wrap:anywhere]">{b.pengarang}</span>
                     </div>
                   )}
                   {/* punggung buku */}

@@ -53,7 +53,7 @@ export default function DaftarPengumumanPage() {
                 </span>
                 <span className="text-sm text-[#4a4a3f]/70">{p.tanggal_rilis}</span>
               </div>
-              <h2 className="mt-3 text-lg font-semibold text-[#2f3b22] md:text-xl">{p.judul}</h2>
+              <h2 className="mt-3 text-lg font-semibold text-[#2f3b22] [overflow-wrap:anywhere] md:text-xl">{p.judul}</h2>
               <p className="mt-2 text-sm font-semibold text-[#5e6b45]">Baca selengkapnya →</p>
             </Link>
           ))}

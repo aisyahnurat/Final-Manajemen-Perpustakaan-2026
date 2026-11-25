@@ -31,14 +31,14 @@ export default function Buku3D({ buku }) {
             style={{ backgroundColor: "#243019" }}
           >
             <div>
-              <p className="line-clamp-2 text-xs font-bold leading-tight">{buku.judul}</p>
-              <p className="mt-2 line-clamp-[8] text-[10px] leading-snug text-[#fff0c5]/85 md:text-[11px]">
+              <p className="line-clamp-2 text-xs font-bold leading-tight [overflow-wrap:anywhere]">{buku.judul}</p>
+              <p className="mt-2 line-clamp-[8] text-[10px] leading-snug [overflow-wrap:anywhere] text-[#fff0c5]/85 md:text-[11px]">
                 {buku.sinopsis || "Belum ada sinopsis untuk buku ini."}
               </p>
             </div>
             <div>
-              <p className="line-clamp-1 text-[10px] font-semibold">{buku.pengarang}</p>
-              <p className="mb-2 line-clamp-1 text-[10px] opacity-70">{buku.penerbit}</p>
+              <p className="truncate text-[10px] [overflow-wrap:anywhere] font-semibold">{buku.pengarang}</p>
+              <p className="mb-2 truncate text-[10px] [overflow-wrap:anywhere] opacity-70">{buku.penerbit}</p>
               <div className="rounded-sm bg-white px-2 py-1">
                 <div
                   className="h-6"
@@ -73,8 +73,8 @@ export default function Buku3D({ buku }) {
                 className="flex h-full flex-col justify-between p-4 pl-6 text-left text-white"
                 style={{ backgroundColor: warna }}
               >
-                <span className="line-clamp-4 text-lg font-bold leading-tight">{buku.judul}</span>
-                <span className="text-sm opacity-90">{buku.pengarang}</span>
+                <span className="line-clamp-4 text-lg font-bold leading-tight [overflow-wrap:anywhere]">{buku.judul}</span>
+                <span className="text-sm opacity-90 [overflow-wrap:anywhere]">{buku.pengarang}</span>
               </div>
             )}
             {/* lipatan di sisi punggung */}

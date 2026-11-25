@@ -223,11 +223,11 @@ export default function BukuPage() {
                 {buku.map((b) => (
                   <tr key={b.id} className="border-t border-[#a9ae88]/40">
                     <td className="px-3 py-2 font-semibold text-[#2f3b22]">
-                      <div className="line-clamp-2 max-w-xs" title={b.judul}>{b.judul}</div>
+                      <div className="line-clamp-2 max-w-xs [overflow-wrap:anywhere]" title={b.judul}>{b.judul}</div>
                     </td>
                     <td className="px-3 py-2">{b.isbn}</td>
                     <td className="px-3 py-2">
-                      <div className="line-clamp-2 max-w-[12rem]" title={b.pengarang}>{b.pengarang}</div>
+                      <div className="line-clamp-2 max-w-[12rem] [overflow-wrap:anywhere]" title={b.pengarang}>{b.pengarang}</div>
                     </td>
                     <td className="px-3 py-2">{b.kategori}</td>
                     <td className="px-3 py-2">

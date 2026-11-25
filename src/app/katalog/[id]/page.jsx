@@ -95,7 +95,7 @@ export default function DetailBukuPage() {
             <span className="inline-block rounded-full bg-[#a9ae88] px-3 py-1 text-xs font-semibold text-white">
               {buku.kategori}
             </span>
-            <h1 className="mt-3 font-serif text-3xl font-bold leading-tight text-[#2f3b22] md:text-5xl">
+            <h1 className="mt-3 font-serif text-3xl font-bold leading-tight text-[#2f3b22] [overflow-wrap:anywhere] md:text-5xl">
               {buku.judul}
             </h1>
             <p className="mt-2 text-lg font-semibold text-[#4a4a3f]">{buku.pengarang}</p>
@@ -148,20 +148,20 @@ export default function DetailBukuPage() {
 
         {/* Panel bawah: sinopsis, rincian, ulasan */}
         <section className="grid gap-8 rounded-3xl bg-[#fffaf0]/90 p-6 shadow-lg md:grid-cols-[2fr_1fr] md:p-10">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-lg font-bold text-[#2f3b22]">Sinopsis</h2>
-            <p className="mt-3 whitespace-pre-line leading-relaxed text-[#4a4a3f]">
+            <p className="mt-3 whitespace-pre-line [overflow-wrap:anywhere] leading-relaxed text-[#4a4a3f]">
               {buku.sinopsis || "Belum ada sinopsis untuk buku ini."}
             </p>
           </div>
 
-          <div>
+          <div className="min-w-0">
             <h2 className="text-lg font-bold text-[#2f3b22]">Rincian Buku</h2>
             <dl className="mt-3 text-sm">
               {rincian.map(([nama, nilai]) => (
                 <div key={nama} className="flex justify-between gap-4 border-b border-[#a9ae88]/40 py-2">
-                  <dt className="text-[#4a4a3f]/70">{nama}</dt>
-                  <dd className="text-right font-semibold text-[#2f3b22]">{nilai}</dd>
+                  <dt className="shrink-0 text-[#4a4a3f]/70">{nama}</dt>
+                  <dd className="min-w-0 [overflow-wrap:anywhere] text-right font-semibold text-[#2f3b22]">{nilai}</dd>
                 </div>
               ))}
             </dl>
@@ -181,7 +181,7 @@ export default function DetailBukuPage() {
                     <p className="text-sm text-[#827148]">
                       {bintang(u.rating)} <span className="text-[#4a4a3f]/70">· {u.tanggal}</span>
                     </p>
-                    {u.komentar && <p className="mt-1 break-words text-[#4a4a3f]">{u.komentar}</p>}
+                    {u.komentar && <p className="mt-1 [overflow-wrap:anywhere] text-[#4a4a3f]">{u.komentar}</p>}
                   </div>
                 </div>
               ))}
