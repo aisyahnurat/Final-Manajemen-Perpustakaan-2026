@@ -41,15 +41,26 @@ export async function POST(request) {
       return NextResponse.json({ message: galatId }, { status: 400 });
     }
 
+    const namaBersih = String(u.nama_lengkap || "").trim();
+    if (namaBersih.length < 2 || namaBersih.length > 100) {
+      return NextResponse.json(
+        { message: "Nama lengkap harus 2–100 karakter" },
+        { status: 400 }
+      );
+    }
+    if (String(u.email || "").length > 100) {
+      return NextResponse.json({ message: "Email maksimal 100 karakter" }, { status: 400 });
+    }
+
     const hash = await bcrypt.hash(u.password, 10);
     await pool.query(
       `INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
        VALUES ($1, $2, $3, $4, $5)`,
-      [u.nama_lengkap, u.email, hash, u.role, u.nomor_identitas]
+      [namaBersih, u.email, hash, u.role, u.nomor_identitas]
     );
     return NextResponse.json(
       {
-        message: `Pengguna ${namaPengguna(u.nama_lengkap, u.role, u.nomor_identitas)} berhasil ditambahkan`,
+        message: `Pengguna ${namaPengguna(namaBersih, u.role, u.nomor_identitas)} berhasil ditambahkan`,
       },
       { status: 201 }
     );

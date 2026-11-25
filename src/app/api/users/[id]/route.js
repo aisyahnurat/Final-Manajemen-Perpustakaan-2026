@@ -43,10 +43,21 @@ export async function PUT(request, { params }) {
       );
     }
 
+    const namaBersih = String(u.nama_lengkap || "").trim();
+    if (namaBersih.length < 2 || namaBersih.length > 100) {
+      return NextResponse.json(
+        { message: "Nama lengkap harus 2–100 karakter" },
+        { status: 400 }
+      );
+    }
+    if (String(u.email || "").length > 100) {
+      return NextResponse.json({ message: "Email maksimal 100 karakter" }, { status: 400 });
+    }
+
     await pool.query(
       `UPDATE users SET nama_lengkap = $1, email = $2, role = $3, is_active = $4
        WHERE id = $5`,
-      [u.nama_lengkap, u.email, u.role, u.is_active, id]
+      [namaBersih, u.email, u.role, u.is_active, id]
     );
     return NextResponse.json({
       message: `Data pengguna ${namaPengguna(u.nama_lengkap, u.role, nomor)} berhasil diperbarui`,

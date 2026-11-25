@@ -22,6 +22,9 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    if (String(email || "").length > 100) {
+      return NextResponse.json({ message: "Email maksimal 100 karakter" }, { status: 400 });
+    }
 
     // validasi NIM: 1 huruf (A-H, M, N, P, R) + 9 angka
     const nimBersih = String(nim).trim().toUpperCase();
@@ -32,11 +35,19 @@ export async function POST(request) {
       );
     }
 
+    const namaBersih = String(nama || "").trim();
+    if (namaBersih.length < 2 || namaBersih.length > 100) {
+      return NextResponse.json(
+        { message: "Nama lengkap harus 2–100 karakter" },
+        { status: 400 }
+      );
+    }
+
     const hash = await bcrypt.hash(password, 10);
     await pool.query(
       `INSERT INTO users (nama_lengkap, email, password, role, nomor_identitas)
        VALUES ($1, $2, $3, 'mahasiswa', $4)`,
-      [nama, email, hash, nimBersih]
+      [namaBersih, email, hash, nimBersih]
     );
 
     return NextResponse.json(
