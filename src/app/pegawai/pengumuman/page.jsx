@@ -106,7 +106,7 @@ export default function PengumumanPage() {
           <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-3">
             <label className="block sm:col-span-3">
               <span className="mb-1 block text-xs font-semibold text-[#2f3b22]">Judul</span>
-              <input name="judul" value={form.judul} onChange={ubah} required className={kolom} />
+              <input name="judul" value={form.judul} onChange={ubah} required className={kolom} maxLength={150} />
             </label>
 
             <label className="block sm:col-span-3">
@@ -118,6 +118,7 @@ export default function PengumumanPage() {
                 required
                 rows={5}
                 className={kolom}
+                maxLength={5000}
               />
             </label>
 
@@ -198,7 +199,9 @@ export default function PengumumanPage() {
               <tbody className="bg-white/80 text-[#4a4a3f]">
                 {daftar.map((p) => (
                   <tr key={p.id} className="border-t border-[#a9ae88]/40">
-                    <td className="px-3 py-2 font-semibold text-[#2f3b22]">{p.judul}</td>
+                    <td className="px-3 py-2 font-semibold text-[#2f3b22]">
+                      <div className="line-clamp-2 max-w-xs [overflow-wrap:anywhere]" title={p.judul}>{p.judul}</div>
+                    </td>
                     <td className="px-3 py-2">
                       <span
                         className="rounded-full px-2 py-0.5 text-xs font-semibold text-white"
