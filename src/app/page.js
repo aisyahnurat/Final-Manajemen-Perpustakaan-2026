@@ -58,14 +58,14 @@ export default function HomePage() {
           <p className="text-xs font-semibold tracking-[0.25em] text-[#4a4a3f]">
             SELAMAT DATANG DI PERPUSTAKAAN
           </p>
-          <h1 className="mt-4 text-4xl font-extrabold leading-tight text-[#2f3b22] md:text-6xl">
+          <h1 className="mt-4 text-4xl font-extrabold leading-tight text-[#2f3b22] [text-shadow:0_0_14px_rgba(255,240,197,0.9)] md:text-6xl">
             Temukan Buku.
             <br />
-            <span className="text-[#5e6b45] underline decoration-[#827148] decoration-4 underline-offset-8">
+            <span className="text-[#5e6b45] [text-shadow:0_0_14px_rgba(255,240,197,0.9)] underline decoration-[#827148] decoration-4 underline-offset-8">
               Temukan Duniamu.
             </span>
           </h1>
-          <p className="mt-6 max-w-md text-[#4a4a3f]">
+          <p className="mt-6 max-w-md text-[#4a4a3f] [text-shadow:0_0_10px_rgba(255,240,197,0.95)]">
             Ribuan halaman menunggu. Tempat di mana ngelamun pun tetap dapet ilmu karena dikelilingi buku.
           </p>
           <Link
