@@ -1,34 +1,36 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { pesanKembar } from "@/lib/pesanKategori";
-
-const KELOMPOK = ["Fiksi", "Non-Fiksi"];
+import { validasiKategori } from "@/lib/validasiKategori";
+import cekAdmin from "@/lib/cekAdmin";
 
 export async function PUT(request, { params }) {
   try {
     const { id } = await params;
-    const { nama, kode, kelompok, deskripsi } = await request.json();
-    if (!nama || !kode) {
-      return NextResponse.json(
-        { message: "Nama dan kode kategori wajib diisi" },
-        { status: 400 }
-      );
+    const k = await request.json();
+
+    if (!(await cekAdmin(k.admin_id))) {
+      return NextResponse.json({ message: "Tidak punya akses" }, { status: 403 });
     }
-    if (!KELOMPOK.includes(kelompok)) {
-      return NextResponse.json(
-        { message: "Kelompok harus Fiksi atau Non-Fiksi" },
-        { status: 400 }
-      );
+
+    const galat = validasiKategori(k);
+    if (galat) {
+      return NextResponse.json({ message: galat }, { status: 400 });
     }
+
+    const nama = String(k.nama).trim();
+    const kode = String(k.kode).trim().toUpperCase();
+    const deskripsi = String(k.deskripsi || "").trim() || null;
+
     const result = await pool.query(
       "UPDATE categories SET nama = $1, kode = $2, kelompok = $3, deskripsi = $4 WHERE id = $5",
-      [nama, kode, kelompok, deskripsi, id]
+      [nama, kode, k.kelompok, deskripsi, id]
     );
     if (result.rowCount === 0) {
       return NextResponse.json({ message: "Kategori tidak ditemukan" }, { status: 404 });
     }
     return NextResponse.json({
-      message: `Kategori "${nama}" (${kelompok}, kode ${kode}) berhasil diperbarui`,
+      message: `Kategori "${nama}" (${k.kelompok}, kode ${kode}) berhasil diperbarui`,
     });
   } catch (error) {
     if (error.code === "23505") {
@@ -42,6 +44,11 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
+
+    const adminId = new URL(request.url).searchParams.get("admin_id");
+    if (!(await cekAdmin(adminId))) {
+      return NextResponse.json({ message: "Tidak punya akses" }, { status: 403 });
+    }
 
     const kat = await pool.query("SELECT nama FROM categories WHERE id = $1", [id]);
     if (kat.rows.length === 0) {

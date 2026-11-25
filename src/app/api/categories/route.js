@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { pesanKembar } from "@/lib/pesanKategori";
-
-const KELOMPOK = ["Fiksi", "Non-Fiksi"];
+import { validasiKategori } from "@/lib/validasiKategori";
+import cekAdmin from "@/lib/cekAdmin";
 
 export async function GET() {
   const result = await pool.query(
@@ -18,25 +18,27 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { nama, kode, kelompok, deskripsi } = await request.json();
-    if (!nama || !kode) {
-      return NextResponse.json(
-        { message: "Nama dan kode kategori wajib diisi" },
-        { status: 400 }
-      );
+    const k = await request.json();
+    
+    if (!(await cekAdmin(k.admin_id))) {
+      return NextResponse.json({ message: "Tidak punya akses" }, { status: 403 });
     }
-    if (!KELOMPOK.includes(kelompok)) {
-      return NextResponse.json(
-        { message: "Kelompok harus Fiksi atau Non-Fiksi" },
-        { status: 400 }
-      );
+
+    const galat = validasiKategori(k);
+    if (galat) {
+      return NextResponse.json({ message: galat }, { status: 400 });
     }
+
+    const nama = String(k.nama).trim();
+    const kode = String(k.kode).trim().toUpperCase();
+    const deskripsi = String(k.deskripsi || "").trim() || null;
+
     await pool.query(
       "INSERT INTO categories (nama, kode, kelompok, deskripsi) VALUES ($1, $2, $3, $4)",
-      [nama, kode, kelompok, deskripsi]
+      [nama, kode, k.kelompok, deskripsi]
     );
     return NextResponse.json(
-      { message: `Kategori "${nama}" (${kelompok}, kode ${kode}) berhasil ditambahkan` },
+      { message: `Kategori "${nama}" (${k.kelompok}, kode ${kode}) berhasil ditambahkan` },
       { status: 201 }
     );
   } catch (error) {
